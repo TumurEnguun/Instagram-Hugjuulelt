@@ -1,0 +1,182 @@
+/**
+ * Checks every credential in .env by actually calling the service.
+ *
+ *   npm run doctor
+ *
+ * Run it after filling in each key. It never prints a secret, only whether
+ * the secret works. If TELEGRAM_CHAT_ID is missing it will find it for you.
+ */
+import './config.js';
+
+const results = [];
+
+function ok(name, detail) {
+  results.push({ name, state: 'ok', detail });
+  console.log(`  [ OK ]   ${name}  ${detail}`);
+}
+function bad(name, detail) {
+  results.push({ name, state: 'bad', detail });
+  console.log(`  [FAIL]   ${name}  ${detail}`);
+}
+function skip(name, detail) {
+  results.push({ name, state: 'skip', detail });
+  console.log(`  [ -- ]   ${name}  ${detail}`);
+}
+
+async function checkGemini() {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) return skip('GEMINI_API_KEY', 'not set yet');
+
+  try {
+    const { GoogleGenAI } = await import('@google/genai');
+    const ai = new GoogleGenAI({ apiKey: key });
+    const res = await ai.models.generateContent({
+      model: 'gemini-3.5-flash-lite',
+      contents: 'Reply with the single word: ready',
+    });
+    if (!res.text) return bad('GEMINI_API_KEY', 'key works but the model returned nothing');
+    ok('GEMINI_API_KEY', 'text generation works');
+  } catch (err) {
+    const m = err.message || String(err);
+    if (/API key not valid|API_KEY_INVALID/i.test(m)) {
+      return bad('GEMINI_API_KEY', 'the key is not valid');
+    }
+    return bad('GEMINI_API_KEY', m.slice(0, 160));
+  }
+}
+
+async function checkGeminiBilling() {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) return skip('Gemini billing', 'needs GEMINI_API_KEY first');
+
+  // Image generation is the thing that actually requires a billed project, and
+  // it is the single most common reason this bot fails on day one.
+  try {
+    const { GoogleGenAI } = await import('@google/genai');
+    const ai = new GoogleGenAI({ apiKey: key });
+    const res = await ai.models.generateContent({
+      model: 'gemini-3.1-flash-image',
+      contents: 'A plain solid light grey square. Nothing else.',
+      config: { responseModalities: ['IMAGE'], imageConfig: { imageSize: '1K' } },
+    });
+    const parts = res?.candidates?.[0]?.content?.parts ?? [];
+    const hasImage = parts.some((p) => p.inlineData?.data);
+    if (!hasImage) return bad('Gemini billing', 'no image came back; billing is probably not enabled');
+    ok('Gemini billing', 'image generation works (this call cost about $0.04)');
+  } catch (err) {
+    const m = err.message || String(err);
+    if (/billing|quota|PERMISSION_DENIED|FAILED_PRECONDITION/i.test(m)) {
+      return bad('Gemini billing', 'enable billing on the Google Cloud project behind this key');
+    }
+    return bad('Gemini billing', m.slice(0, 160));
+  }
+}
+
+async function checkTelegram() {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  if (!token) {
+    skip('TELEGRAM_BOT_TOKEN', 'not set yet');
+    return skip('TELEGRAM_CHAT_ID', 'needs the bot token first');
+  }
+
+  let botName;
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+    const json = await res.json();
+    if (!json.ok) return bad('TELEGRAM_BOT_TOKEN', json.description);
+    botName = json.result.username;
+    ok('TELEGRAM_BOT_TOKEN', `bot is @${botName}`);
+  } catch (err) {
+    return bad('TELEGRAM_BOT_TOKEN', err.message);
+  }
+
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!chatId) {
+    // Find it for them rather than making them read raw JSON in a browser.
+    const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
+    const json = await res.json();
+    const chats = new Map();
+    for (const u of json.result ?? []) {
+      const c = u.message?.chat ?? u.callback_query?.message?.chat;
+      if (c) chats.set(c.id, [c.first_name, c.username].filter(Boolean).join(' / ') || 'you');
+    }
+    if (chats.size === 0) {
+      return bad(
+        'TELEGRAM_CHAT_ID',
+        `not set. Open Telegram, message @${botName} anything, then run this again.`
+      );
+    }
+    console.log('');
+    for (const [id, who] of chats) {
+      console.log(`           Found a chat: ${who}`);
+      console.log(`           Put this in .env  ->  TELEGRAM_CHAT_ID=${id}`);
+    }
+    console.log('');
+    return bad('TELEGRAM_CHAT_ID', 'not set yet, but see the id above');
+  }
+
+  // Prove end to end that the bot can actually reach him.
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: 'Setup check: the hamster bot can reach you.' }),
+    });
+    const json = await res.json();
+    if (!json.ok) return bad('TELEGRAM_CHAT_ID', json.description);
+    ok('TELEGRAM_CHAT_ID', 'test message sent, check your Telegram');
+  } catch (err) {
+    bad('TELEGRAM_CHAT_ID', err.message);
+  }
+}
+
+async function checkInstagram() {
+  const id = process.env.IG_USER_ID;
+  const token = process.env.IG_ACCESS_TOKEN;
+  if (!id || !token) {
+    return skip('IG_USER_ID / IG_ACCESS_TOKEN', 'not set yet');
+  }
+
+  try {
+    const url = `https://graph.instagram.com/v25.0/${id}?fields=id,username,account_type&access_token=${encodeURIComponent(token)}`;
+    const res = await fetch(url);
+    const json = await res.json();
+    if (json.error) return bad('IG_ACCESS_TOKEN', json.error.message);
+    ok('IG_ACCESS_TOKEN', `connected to @${json.username}${json.account_type ? ` (${json.account_type})` : ''}`);
+  } catch (err) {
+    bad('IG_ACCESS_TOKEN', err.message);
+  }
+}
+
+function checkMetaApp() {
+  const hasId = !!process.env.META_APP_ID;
+  const hasSecret = !!process.env.META_APP_SECRET;
+  if (hasId && hasSecret) return ok('META_APP_ID / SECRET', 'present (only used by the monthly refresh)');
+  skip('META_APP_ID / SECRET', 'not set yet, optional until the token needs refreshing');
+}
+
+async function main() {
+  console.log('\nChecking your credentials. No secret values are printed.\n');
+
+  await checkGemini();
+  await checkGeminiBilling();
+  await checkTelegram();
+  await checkInstagram();
+  checkMetaApp();
+
+  const failed = results.filter((r) => r.state === 'bad').length;
+  const pending = results.filter((r) => r.state === 'skip').length;
+
+  console.log('');
+  if (failed === 0 && pending === 0) {
+    console.log('Everything works. Next: npm run bootstrap\n');
+  } else {
+    console.log(`${failed} failing, ${pending} not filled in yet. See SETUP.md for each one.\n`);
+  }
+}
+
+main().catch((err) => {
+  console.error(err.message);
+  process.exit(1);
+});

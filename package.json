@@ -8,6 +8,7 @@
     "node": ">=20"
   },
   "scripts": {
+    "doctor": "node src/doctor.js",
     "bootstrap": "node src/bootstrap.js",
     "propose": "node src/propose.js",
     "propose:dry": "node src/propose.js --dry-run",
