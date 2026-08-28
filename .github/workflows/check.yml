@@ -1,0 +1,47 @@
+name: Check for approval
+
+# Every 30 minutes across the Ulaanbaatar daytime window
+# (01:15-13:45 UTC = 09:15-21:45 local).
+on:
+  schedule:
+    - cron: '15,45 1-13 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: hamster-bot
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GITHUB_BRANCH: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - name: Act on the latest Telegram answer
+        run: node src/check.js
+
+      - name: Commit any change
+        if: always()
+        run: |
+          git config user.name "hamster-bot"
+          git config user.email "hamster-bot@users.noreply.github.com"
+          git add -A posts pending.json story-state.json
+          git diff --staged --quiet || git commit -m "Handle approval decision"
+          git pull --rebase --autostash origin "${GITHUB_BRANCH}"
+          git push origin HEAD:"${GITHUB_BRANCH}"
