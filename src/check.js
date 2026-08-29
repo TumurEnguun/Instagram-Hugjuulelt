@@ -5,7 +5,7 @@
  *   node src/check.js --wait 10   poll for up to 10 minutes first
  */
 import { readPending, writePending } from './store.js';
-import { pollDecision, waitForDecision, sendMessage } from './telegram.js';
+import { pollDecision, waitForDecision, sendMessage, confirmUpdates } from './telegram.js';
 import { applyDecision } from './decide.js';
 
 const waitIdx = process.argv.indexOf('--wait');
@@ -30,8 +30,12 @@ async function main() {
 
   console.log(`Decision: ${decision.action}`);
 
-  // Record the offset before acting, so a crash mid-publish cannot cause the
-  // same button press to be replayed on the next run.
+  // Consume the press on Telegram's side FIRST. This is what actually
+  // guarantees one post per approval: local state can be lost if a CI push
+  // fails, but a confirmed update is gone from the queue for good.
+  await confirmUpdates(decision.maxUpdateId);
+
+  // Mirror it locally too, so a run that never reaches Telegram still knows.
   writePending({ ...pending, lastUpdateId: decision.maxUpdateId });
 
   const result = await applyDecision(decision.action, { ...pending, lastUpdateId: decision.maxUpdateId }, decision.callbackId);

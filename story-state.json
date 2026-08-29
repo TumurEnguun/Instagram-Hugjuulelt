@@ -1,7 +1,17 @@
 {
   "seriesTitle": "TEST RUN",
-  "episodeCount": 0,
-  "currentArc": "A cheerful jester is setting up his carnival act.",
-  "runningGags": [],
-  "episodes": []
+  "episodeCount": 1,
+  "currentArc": "The hamsters are now officially part of the carnival's backstage crew.",
+  "runningGags": [
+    "The hamsters constantly try to copy whatever the jester is doing with disastrously cute results."
+  ],
+  "episodes": [
+    {
+      "n": 1,
+      "title": "The First Juggling Ball",
+      "summary": "The hamster couple met the cheerful jester as he set up his carnival act and watched him juggle.",
+      "postedAt": "2026-08-29T05:34:17.909Z",
+      "igMediaId": "17996875373816353"
+    }
+  ]
 }

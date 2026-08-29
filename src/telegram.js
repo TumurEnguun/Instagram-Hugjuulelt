@@ -125,6 +125,25 @@ export async function drainUpdates() {
   return maxId;
 }
 
+/**
+ * Tell Telegram a press is consumed, so it is dropped from the queue for good.
+ *
+ * This is the authoritative guard against posting twice. Recording the offset
+ * in pending.json is not enough on its own, because in CI that file only
+ * survives if the commit and push succeed. If a push fails, the next run would
+ * otherwise read the same press again and publish a second copy.
+ *
+ * Deliberately called BEFORE acting on the decision. Losing a press means
+ * nothing happens and you tap again; keeping one risks a duplicate post.
+ */
+export async function confirmUpdates(upToId) {
+  await retryFetch(api('getUpdates'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ offset: upToId + 1, timeout: 0 }),
+  });
+}
+
 /** Stops the spinner on the tapped button and shows a toast. */
 export async function ackButton(callbackId, text) {
   try {
