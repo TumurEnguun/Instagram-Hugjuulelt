@@ -3,7 +3,10 @@
 One-time setup. Budget about an hour. Do the steps in order, because each one
 gives you a value the next one needs.
 
-At the end you will have six values to paste into GitHub Secrets.
+At the end you will have seven values to paste into GitHub Secrets.
+
+After filling in each one, run `npm run doctor`. It calls the real service and
+tells you whether that key actually works, without ever printing a secret.
 
 ---
 
@@ -25,23 +28,28 @@ In the Instagram mobile app, on the hamster account:
 
 1. Settings and privacy > Account type and tools > Switch to professional account.
 2. Choose **Creator** or **Business**. Either works.
-3. When it offers to connect a Facebook Page, connect one. Create a new Page if
-   you do not have one.
 
-A Facebook Page is not optional. Meta's publishing API refuses to work without
-one, even for the Instagram-login flow.
+That is the whole step.
+
+### You do not need a Facebook Page
+
+This trips a lot of people up, including the earlier version of this guide.
+
+There are two ways to reach the Instagram API, and only one of them needs a Page:
+
+| Login method | Facebook Page needed? |
+|---|---|
+| **Instagram API with Instagram Login** (what this bot uses) | **No** |
+| Instagram API with Facebook Login | Yes |
+
+Meta's own overview describes the Instagram Login route as serving accounts
+"with a presence on Instagram only". So if Instagram refuses to connect a Page,
+or you cannot find Page Publishing Authorization anywhere, ignore both and carry
+on. Neither applies here.
 
 ---
 
-## 3. Page Publishing Authorization
-
-In Meta Business Suite for that Page, complete **Page Publishing Authorization**.
-It is an identity check, and publishing through the API stays blocked until it
-passes. It can take a day or two to be approved, so start it early.
-
----
-
-## 4. Create the Meta app
+## 3. Create the Meta app
 
 1. Go to <https://developers.facebook.com/apps> and create an app.
 2. Pick the business type when asked.
@@ -74,22 +82,21 @@ fails it messages you on Telegram rather than dying quietly.
 
 ---
 
-## 5. Telegram bot
+## 4. Telegram bot
 
 1. Message [@BotFather](https://t.me/BotFather) and send `/newbot`.
 2. Pick a name and a username. It gives you a token: that is `TELEGRAM_BOT_TOKEN`.
 3. **Send your new bot any message.** A bot cannot start a conversation with
    you, so this step is required or nothing will ever reach you.
-4. Get your chat ID by opening this URL in a browser, with your token in place:
+4. Put the token in `.env`, then run `npm run doctor`. It looks up your chat ID
+   and prints exactly what to paste.
 
-   `https://api.telegram.org/bot<YOUR_TOKEN>/getUpdates`
-
-   Find `"chat":{"id":123456789` in the response. That number is
-   `TELEGRAM_CHAT_ID`.
+The chat ID is a **number**, like `8278399317`. It is not the bot username.
+That catches most people out.
 
 ---
 
-## 6. GitHub repo
+## 5. GitHub repo
 
 Create a repo and push this folder to it.
 
@@ -109,12 +116,12 @@ In the repo: Settings > Secrets and variables > Actions > New repository secret.
 | Secret | From |
 |---|---|
 | `GEMINI_API_KEY` | step 1 |
-| `IG_USER_ID` | step 4 |
-| `IG_ACCESS_TOKEN` | step 4 |
-| `META_APP_ID` | step 4 |
-| `META_APP_SECRET` | step 4 |
-| `TELEGRAM_BOT_TOKEN` | step 5 |
-| `TELEGRAM_CHAT_ID` | step 5 |
+| `IG_USER_ID` | step 3 |
+| `IG_ACCESS_TOKEN` | step 3 |
+| `META_APP_ID` | step 3 |
+| `META_APP_SECRET` | step 3 |
+| `TELEGRAM_BOT_TOKEN` | step 4 |
+| `TELEGRAM_CHAT_ID` | step 4 |
 | `GH_PAT` | optional, see below |
 
 `GH_PAT` is a fine-grained personal access token with **read and write access to
@@ -130,7 +137,7 @@ needs this.
 
 ---
 
-## 7. Create the hamsters
+## 6. Create the hamsters
 
 Locally, copy `.env.example` to `.env`, fill it in, then:
 
@@ -157,7 +164,7 @@ Commit `bible.md`, `characters/` and `story-state.json`, then push.
 
 ---
 
-## 8. First real run
+## 7. First real run
 
 In the Actions tab, run **Propose daily post** manually. You should get a
 Telegram message within a minute or two. Tap a button and watch the run finish.
