@@ -11,8 +11,30 @@
  */
 import { need, optional } from './config.js';
 
+/**
+ * Accept whatever form of the repo the user pasted. Copying the clone URL out
+ * of GitHub is the obvious thing to do, and it silently produces a nonsense
+ * raw URL that Instagram rejects with an unrelated-sounding error.
+ */
+export function normalizeRepo(value) {
+  const repo = String(value)
+    .trim()
+    .replace(/^git@github\.com:/, '')
+    .replace(/^https?:\/\/(www\.)?github\.com\//i, '')
+    .replace(/\.git$/, '')
+    .replace(/^\/+|\/+$/g, '');
+
+  if (!/^[\w.-]+\/[\w.-]+$/.test(repo)) {
+    throw new Error(
+      `GITHUB_REPOSITORY should look like "owner/repo", got "${value}". ` +
+        `Use TumurEnguun/Instagram-Hugjuulelt, not the full clone URL.`
+    );
+  }
+  return repo;
+}
+
 export function publicUrlFor(filename) {
-  const repo = need('GITHUB_REPOSITORY');
+  const repo = normalizeRepo(need('GITHUB_REPOSITORY'));
   const branch = optional('GITHUB_BRANCH', 'main');
   return `https://raw.githubusercontent.com/${repo}/${branch}/posts/${filename}`;
 }
