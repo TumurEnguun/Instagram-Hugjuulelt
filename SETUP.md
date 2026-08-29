@@ -3,7 +3,7 @@
 One-time setup. Budget about an hour. Do the steps in order, because each one
 gives you a value the next one needs.
 
-At the end you will have seven values to paste into GitHub Secrets.
+At the end you will have five values to paste into GitHub Secrets.
 
 After filling in each one, run `npm run doctor`. It calls the real service and
 tells you whether that key actually works, without ever printing a secret.
@@ -66,13 +66,12 @@ From that screen, copy:
 - the **Instagram user ID** into `IG_USER_ID`
 - the **access token** into `IG_ACCESS_TOKEN`
 
-Also grab, from Settings > Basic:
-
-- **App ID** into `META_APP_ID`
-- **App secret** into `META_APP_SECRET`
 
 Meta redesigns this dashboard often, so the labels may sit in slightly different
-places than described. The four values above are what you are hunting for.
+places than described. The two values above are what you are hunting for.
+
+You do **not** need the App ID or App secret. Refreshing the token only requires
+the token itself.
 
 ### About the token
 
@@ -118,8 +117,6 @@ In the repo: Settings > Secrets and variables > Actions > New repository secret.
 | `GEMINI_API_KEY` | step 1 |
 | `IG_USER_ID` | step 3 |
 | `IG_ACCESS_TOKEN` | step 3 |
-| `META_APP_ID` | step 3 |
-| `META_APP_SECRET` | step 3 |
 | `TELEGRAM_BOT_TOKEN` | step 4 |
 | `TELEGRAM_CHAT_ID` | step 4 |
 | `GH_PAT` | optional, see below |

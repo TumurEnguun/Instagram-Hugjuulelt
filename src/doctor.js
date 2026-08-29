@@ -156,13 +156,6 @@ async function checkInstagram() {
   }
 }
 
-function checkMetaApp() {
-  const hasId = !!process.env.META_APP_ID;
-  const hasSecret = !!process.env.META_APP_SECRET;
-  if (hasId && hasSecret) return ok('META_APP_ID / SECRET', 'present (only used by the monthly refresh)');
-  skip('META_APP_ID / SECRET', 'not set yet, optional until the token needs refreshing');
-}
-
 async function main() {
   console.log('\nChecking your credentials. No secret values are printed.\n');
 
@@ -170,7 +163,6 @@ async function main() {
   await checkGeminiBilling();
   await checkTelegram();
   await checkInstagram();
-  checkMetaApp();
 
   const failed = results.filter((r) => r.state === 'bad').length;
   const pending = results.filter((r) => r.state === 'skip').length;
