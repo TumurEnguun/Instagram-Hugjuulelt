@@ -1,24 +1,7 @@
 {
-  "seriesTitle": "TEST RUN",
-  "episodeCount": 2,
-  "currentArc": "The hamsters are fully embracing their new backstage crew roles, despite wardrobe malfunctions.",
-  "runningGags": [
-    "The hamsters constantly try to copy whatever the jester is doing with disastrously cute results."
-  ],
-  "episodes": [
-    {
-      "n": 1,
-      "title": "The First Juggling Ball",
-      "summary": "The hamster couple met the cheerful jester as he set up his carnival act and watched him juggle.",
-      "postedAt": "2026-08-29T05:34:17.909Z",
-      "igMediaId": "17996875373816353"
-    },
-    {
-      "n": 2,
-      "title": "Backstage Costume Chaos",
-      "summary": "The hamsters attempted to try on the carnival's backstage costume pieces and got hilariously stuck inside a giant jester hat.",
-      "postedAt": "2026-08-29T05:42:07.974Z",
-      "igMediaId": "18091014119449844"
-    }
-  ]
+  "seriesTitle": "",
+  "episodeCount": 0,
+  "currentArc": "",
+  "runningGags": [],
+  "episodes": []
 }
