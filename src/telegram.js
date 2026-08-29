@@ -4,11 +4,12 @@
  * the whole system inside GitHub Actions with nothing else to host.
  */
 import { need } from './config.js';
+import { retryFetch } from './net.js';
 
 const api = (method) => `https://api.telegram.org/bot${need('TELEGRAM_BOT_TOKEN')}/${method}`;
 
 async function call(method, body) {
-  const res = await fetch(api(method), {
+  const res = await retryFetch(api(method), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
@@ -58,7 +59,7 @@ export async function sendProposal(jpegBuffer, episode, episodeNumber) {
     })
   );
 
-  const res = await fetch(api('sendPhoto'), { method: 'POST', body: form });
+  const res = await retryFetch(api('sendPhoto'), { method: 'POST', body: form });
   const json = await res.json();
   if (!json.ok) throw new Error(`Telegram sendPhoto failed: ${json.description}`);
   return json.result;
@@ -70,7 +71,7 @@ export async function sendProposal(jpegBuffer, episode, episodeNumber) {
  * Always takes the LATEST press, so changing your mind works.
  */
 export async function pollDecision(offset = 0) {
-  const res = await fetch(api('getUpdates'), {
+  const res = await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -103,7 +104,7 @@ export async function pollDecision(offset = 0) {
  * to today's brand new post, which could publish something you never saw.
  */
 export async function drainUpdates() {
-  const res = await fetch(api('getUpdates'), {
+  const res = await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ timeout: 0, allowed_updates: ['callback_query'] }),
@@ -116,7 +117,7 @@ export async function drainUpdates() {
 
   // Re-requesting with a higher offset is how Telegram is told these are
   // handled; it drops them from the queue for good.
-  await fetch(api('getUpdates'), {
+  await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ offset: maxId + 1, timeout: 0 }),

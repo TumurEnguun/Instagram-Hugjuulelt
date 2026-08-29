@@ -6,12 +6,13 @@
  *   2. POST /<IG_ID>/media_publish  publish that container
  */
 import { need } from './config.js';
+import { retryFetch } from './net.js';
 
 const GRAPH = 'https://graph.instagram.com/v25.0';
 
 async function graph(pathname, params) {
   const body = new URLSearchParams({ ...params, access_token: need('IG_ACCESS_TOKEN') });
-  const res = await fetch(`${GRAPH}${pathname}`, { method: 'POST', body });
+  const res = await retryFetch(`${GRAPH}${pathname}`, { method: 'POST', body });
   const json = await res.json().catch(() => ({}));
   if (!res.ok || json.error) {
     const e = json.error ?? {};
@@ -28,7 +29,7 @@ async function graph(pathname, params) {
 async function waitForContainer(containerId, { attempts = 20, delayMs = 3000 } = {}) {
   for (let i = 1; i <= attempts; i++) {
     const url = `${GRAPH}/${containerId}?fields=status_code,status&access_token=${encodeURIComponent(need('IG_ACCESS_TOKEN'))}`;
-    const res = await fetch(url);
+    const res = await retryFetch(url);
     const json = await res.json().catch(() => ({}));
     const status = json.status_code;
 
@@ -62,7 +63,7 @@ export async function publishPhoto(imageUrl, caption) {
 export async function checkAccount() {
   const igId = need('IG_USER_ID');
   const url = `${GRAPH}/${igId}?fields=id,username&access_token=${encodeURIComponent(need('IG_ACCESS_TOKEN'))}`;
-  const res = await fetch(url);
+  const res = await retryFetch(url);
   const json = await res.json().catch(() => ({}));
   if (json.error) throw new Error(`Instagram token check failed: ${json.error.message}`);
   return json;

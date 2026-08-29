@@ -7,6 +7,7 @@
  * the secret works. If TELEGRAM_CHAT_ID is missing it will find it for you.
  */
 import './config.js';
+import { retryFetch } from './net.js';
 
 const results = [];
 
@@ -81,7 +82,7 @@ async function checkTelegram() {
 
   let botName;
   try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/getMe`);
+    const res = await retryFetch(`https://api.telegram.org/bot${token}/getMe`);
     const json = await res.json();
     if (!json.ok) return bad('TELEGRAM_BOT_TOKEN', json.description);
     botName = json.result.username;
@@ -96,7 +97,7 @@ async function checkTelegram() {
     // Find it for them rather than making them read raw JSON in a browser.
     let json;
     try {
-      const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
+      const res = await retryFetch(`https://api.telegram.org/bot${token}/getUpdates`);
       json = await res.json();
     } catch (err) {
       // A transient network blip here should not abort the whole checkup.
@@ -124,7 +125,7 @@ async function checkTelegram() {
 
   // Prove end to end that the bot can actually reach him.
   try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const res = await retryFetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, text: 'Setup check: the hamster bot can reach you.' }),
@@ -146,7 +147,7 @@ async function checkInstagram() {
 
   try {
     const url = `https://graph.instagram.com/v25.0/${id}?fields=id,username,account_type&access_token=${encodeURIComponent(token)}`;
-    const res = await fetch(url);
+    const res = await retryFetch(url);
     const json = await res.json();
     if (json.error) return bad('IG_ACCESS_TOKEN', json.error.message);
     ok('IG_ACCESS_TOKEN', `connected to @${json.username}${json.account_type ? ` (${json.account_type})` : ''}`);
