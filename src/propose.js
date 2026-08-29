@@ -8,9 +8,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { paths } from './config.js';
 import { propose } from './decide.js';
-import { readPending } from './store.js';
 import { writeEpisode, drawPanel } from './gemini.js';
-import { readState, readBible, readCharacterRefs } from './store.js';
+import { readState, readBible, readCharacterRefs, readPending } from './store.js';
 import { sendMessage } from './telegram.js';
 
 const dryRun = process.argv.includes('--dry-run');
@@ -38,6 +37,17 @@ async function dry() {
 
 async function main() {
   if (dryRun) return dry();
+
+  // Not set up yet is a normal state, not a failure. Say so plainly and exit
+  // green, rather than waking someone to a red workflow and a stack trace.
+  if (!fs.existsSync(paths.bible) || readCharacterRefs().length === 0) {
+    console.log('No characters yet. Nothing to post.');
+    await sendMessage(
+      'Morning. No post today: the characters have not been created yet.\n\n' +
+        'Run <code>npm run bootstrap</code> when you are ready, and I will start posting the day after.'
+    );
+    return;
+  }
 
   const pending = readPending();
   if (pending.status === 'awaiting') {
