@@ -94,8 +94,14 @@ async function checkTelegram() {
 
   if (!chatId) {
     // Find it for them rather than making them read raw JSON in a browser.
-    const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
-    const json = await res.json();
+    let json;
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${token}/getUpdates`);
+      json = await res.json();
+    } catch (err) {
+      // A transient network blip here should not abort the whole checkup.
+      return bad('TELEGRAM_CHAT_ID', `could not reach Telegram: ${err.message}. Try again.`);
+    }
     const chats = new Map();
     for (const u of json.result ?? []) {
       const c = u.message?.chat ?? u.callback_query?.message?.chat;
