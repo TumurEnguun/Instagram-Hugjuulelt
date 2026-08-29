@@ -1,30 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 2,
-  "attempt": 1,
-  "episode": {
-    "title": "Backstage Costume Chaos",
-    "scene": "A neon-lit carnival dressing room at night, bathed in dramatic purple and acid green light. Two fluffy hamsters stand tangled inside a giant, oversized purple and green jester hat with gold bells, their little paws poking through the seams with wide, startled eyes. In the background, a vanity mirror reflects playing card motifs string-lit with glowing bulbs.",
-    "caption": "Trying on the crew uniforms didn't quite go to plan. Hat is definitely wearing them today! 🎪🐭✨",
-    "hashtags": [
-      "hamstergram",
-      "hamsterlife",
-      "carnival",
-      "cutehamsters",
-      "comicart",
-      "jester",
-      "backstage",
-      "petsdressingup",
-      "wholesome",
-      "cartoon"
-    ],
-    "arcNote": "The hamsters attempted to try on the carnival's backstage costume pieces and got hilariously stuck inside a giant jester hat.",
-    "arcUpdate": "The hamsters are fully embracing their new backstage crew roles, despite wardrobe malfunctions.",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0002-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 16,
-  "lastUpdateId": 0,
-  "createdAt": "2026-08-29T05:41:42.577Z"
+  "status": "none"
 }
