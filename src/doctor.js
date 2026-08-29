@@ -141,8 +141,25 @@ async function checkTelegram() {
 async function checkInstagram() {
   const id = process.env.IG_USER_ID;
   const token = process.env.IG_ACCESS_TOKEN;
-  if (!id || !token) {
-    return skip('IG_USER_ID / IG_ACCESS_TOKEN', 'not set yet');
+
+  if (!token) return skip('IG_USER_ID / IG_ACCESS_TOKEN', 'not set yet');
+
+  // The token knows which account it belongs to, so there is no need to go
+  // hunting for the user ID in Meta's dashboard.
+  if (!id) {
+    try {
+      const url = `https://graph.instagram.com/v25.0/me?fields=id,username&access_token=${encodeURIComponent(token)}`;
+      const res = await retryFetch(url);
+      const me = await res.json();
+      if (me.error) return bad('IG_ACCESS_TOKEN', me.error.message);
+      console.log('');
+      console.log(`           Token belongs to @${me.username}`);
+      console.log(`           Put this in .env  ->  IG_USER_ID=${me.id}`);
+      console.log('');
+      return bad('IG_USER_ID', 'not set yet, but see the id above');
+    } catch (err) {
+      return bad('IG_USER_ID', `could not look it up: ${err.message}`);
+    }
   }
 
   try {

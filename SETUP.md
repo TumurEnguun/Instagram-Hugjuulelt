@@ -61,17 +61,31 @@ on. Neither applies here.
 6. Connect the hamster Instagram account when prompted.
 7. Generate a token.
 
-From that screen, copy:
+Copy the **access token** into `IG_ACCESS_TOKEN`. It is long, starts with
+`IGAA`, and the box usually shows only part of it, so use the copy button.
 
-- the **Instagram user ID** into `IG_USER_ID`
-- the **access token** into `IG_ACCESS_TOKEN`
+You do not need to find the user ID by hand. Save the token, run
+`npm run doctor`, and it asks Instagram which account the token belongs to and
+prints the `IG_USER_ID` to paste.
 
 
 Meta redesigns this dashboard often, so the labels may sit in slightly different
-places than described. The two values above are what you are hunting for.
+places than described. The access token is the one thing you are hunting for.
 
 You do **not** need the App ID or App secret. Refreshing the token only requires
 the token itself.
+
+### If you hit "Insufficient Developer Role"
+
+An unpublished app only lets Instagram accounts that hold a role on it log in.
+Go to **App roles > Roles > Instagram Testers**, add the account, then accept the
+invite at <https://www.instagram.com/accounts/manage_access/> under **Tester
+invites**. The status has to stop saying Pending before the token screen works.
+
+If you normally sign into Instagram through Facebook, you will also need to give
+the account its own password first, via
+<https://www.instagram.com/accounts/password/reset/>. Facebook login keeps
+working afterwards.
 
 ### About the token
 
