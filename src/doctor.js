@@ -1,13 +1,37 @@
 /**
  * Checks every credential in .env by actually calling the service.
  *
- *   npm run doctor
+ *   npm run doctor           check everything, quietly
+ *   npm run doctor -- --ping  also send a real test message to Telegram
  *
  * Run it after filling in each key. It never prints a secret, only whether
  * the secret works. If TELEGRAM_CHAT_ID is missing it will find it for you.
  */
-import './config.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import { ROOT } from './config.js';
 import { retryFetch } from './net.js';
+
+// Remembers which paid checks have already passed. Local only, never committed.
+const CACHE = path.join(ROOT, '.doctor-cache.json');
+
+function readCache() {
+  try {
+    return JSON.parse(fs.readFileSync(CACHE, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+const wasVerified = (name) => readCache()[name] === true;
+
+function markVerified(name) {
+  try {
+    fs.writeFileSync(CACHE, JSON.stringify({ ...readCache(), [name]: true }, null, 2) + '\n');
+  } catch {
+    // A read-only checkout just means the check repeats. Not worth failing over.
+  }
+}
 
 const results = [];
 
@@ -50,6 +74,13 @@ async function checkGeminiBilling() {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return skip('Gemini billing', 'needs GEMINI_API_KEY first');
 
+  // This check costs real money, so once it has passed we remember that and
+  // stop repeating it. --billing forces a fresh check.
+  const force = process.argv.includes('--billing');
+  if (!force && wasVerified('geminiBilling')) {
+    return ok('Gemini billing', 'verified earlier (rerun with --billing to recheck)');
+  }
+
   // Image generation is the thing that actually requires a billed project, and
   // it is the single most common reason this bot fails on day one.
   try {
@@ -63,6 +94,7 @@ async function checkGeminiBilling() {
     const parts = res?.candidates?.[0]?.content?.parts ?? [];
     const hasImage = parts.some((p) => p.inlineData?.data);
     if (!hasImage) return bad('Gemini billing', 'no image came back; billing is probably not enabled');
+    markVerified('geminiBilling');
     ok('Gemini billing', 'image generation works (this call cost about $0.04)');
   } catch (err) {
     const m = err.message || String(err);
@@ -123,16 +155,25 @@ async function checkTelegram() {
     return bad('TELEGRAM_CHAT_ID', 'not set yet, but see the id above');
   }
 
-  // Prove end to end that the bot can actually reach him.
+  // Check the chat quietly by default. Firing a real message on every run
+  // turns a routine health check into Telegram spam.
+  const ping = process.argv.includes('--ping');
+
   try {
-    const res = await retryFetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    const endpoint = ping ? 'sendMessage' : 'getChat';
+    const body = ping
+      ? { chat_id: chatId, text: 'Setup check: the hamster bot can reach you.' }
+      : { chat_id: chatId };
+
+    const res = await retryFetch(`https://api.telegram.org/bot${token}/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text: 'Setup check: the hamster bot can reach you.' }),
+      body: JSON.stringify(body),
     });
     const json = await res.json();
     if (!json.ok) return bad('TELEGRAM_CHAT_ID', json.description);
-    ok('TELEGRAM_CHAT_ID', 'test message sent, check your Telegram');
+
+    ok('TELEGRAM_CHAT_ID', ping ? 'test message sent, check your Telegram' : 'chat reachable (no message sent)');
   } catch (err) {
     bad('TELEGRAM_CHAT_ID', err.message);
   }

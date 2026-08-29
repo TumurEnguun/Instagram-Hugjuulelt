@@ -50,6 +50,7 @@ them mid-series is what makes a feed look inconsistent.
 ## Commands
 
 ```bash
+npm run doctor         # check every credential, without sending anything
 npm run bootstrap      # one time: design and lock the two hamsters
 npm run propose:dry    # generate locally, save to posts/, send nothing
 npm run propose        # generate and ask on Telegram
