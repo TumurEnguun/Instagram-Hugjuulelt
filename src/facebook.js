@@ -61,7 +61,22 @@ export async function publishPhoto(imageUrl, caption) {
 export async function checkPage() {
   if (!isConfigured()) return null;
 
-  const url = `${GRAPH}/${optional('FB_PAGE_ID')}?fields=id,name&access_token=${encodeURIComponent(optional('FB_PAGE_ACCESS_TOKEN'))}`;
+  const token = optional('FB_PAGE_ACCESS_TOKEN');
+  const pageId = optional('FB_PAGE_ID');
+
+  // A USER token here still passes a plain read of the Page, then fails at
+  // publish time with a confusing complaint about the long-deprecated
+  // publish_actions. Catch the mix-up up front and name it.
+  const who = await retryFetch(`${GRAPH}/me?fields=id,name&access_token=${encodeURIComponent(token)}`);
+  const whoJson = await who.json().catch(() => ({}));
+  if (whoJson.id && whoJson.id !== pageId) {
+    throw new Error(
+      `this is a USER token for "${whoJson.name}", not a Page token. ` +
+        `Rerun npm run fb-setup and copy the FB_PAGE_ACCESS_TOKEN line it prints.`
+    );
+  }
+
+  const url = `${GRAPH}/${pageId}?fields=id,name&access_token=${encodeURIComponent(token)}`;
   const res = await retryFetch(url);
   const json = await res.json().catch(() => ({}));
 
