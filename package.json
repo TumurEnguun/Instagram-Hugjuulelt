@@ -15,7 +15,8 @@
     "check": "node src/check.js",
     "refresh-token": "node src/refresh-token.js",
     "listen": "node src/listen.js",
-    "fb-setup": "node src/fb-setup.js"
+    "fb-setup": "node src/fb-setup.js",
+    "insights": "node src/insights.js"
   },
   "dependencies": {
     "@google/genai": "^1.40.0",
