@@ -30,8 +30,12 @@ export const models = {
   // Stable generateContent path. The `interactions` API is still marked
   // experimental by the SDK, which is the wrong bet for a bot that has to
   // run unattended for months.
-  writer: 'gemini-3.5-flash-lite',
-  artist: 'gemini-3.1-flash-image',
+  // Comedy is hard, and text costs fractions of a cent, so this is the one
+  // place where paying for a stronger model is obviously worth it.
+  writer: 'gemini-3.7-flash',
+  // Pro handles character consistency and composition noticeably better, for
+  // about three cents more per post. Worth it for the one image people see.
+  artist: 'gemini-3-pro-image',
 };
 
 export const image = {

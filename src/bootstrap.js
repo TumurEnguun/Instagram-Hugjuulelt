@@ -37,20 +37,23 @@ const BIBLE_SCHEMA = {
         name: { type: 'string' },
         appearance: {
           type: 'string',
-          description: 'Fur colour, markings, ear and body shape, signature accessory. Very specific and repeatable.',
+          description:
+            'Fur colour, markings, ear shape, body shape, fur length and signature item. Concrete and physical, written to be redrawn identically hundreds of times.',
         },
+        signatureItem: { type: 'string', description: 'The one item this hamster always has.' },
         personality: { type: 'string' },
       },
-      required: ['name', 'appearance', 'personality'],
+      required: ['name', 'appearance', 'signatureItem', 'personality'],
     },
     hamsterB: {
       type: 'object',
       properties: {
         name: { type: 'string' },
         appearance: { type: 'string' },
+        signatureItem: { type: 'string', description: 'The one item this hamster always has.' },
         personality: { type: 'string' },
       },
-      required: ['name', 'appearance', 'personality'],
+      required: ['name', 'appearance', 'signatureItem', 'personality'],
     },
     world: { type: 'string', description: 'Where they live and the recurring settings.' },
     neverDo: { type: 'array', items: { type: 'string' }, description: 'Things that must never appear.' },
@@ -62,17 +65,34 @@ async function inventBible(brief) {
   const ai = new GoogleGenAI({ apiKey: need('GEMINI_API_KEY') });
   const res = await ai.models.generateContent({
     model: models.writer,
-    contents: `Design the series bible for a cute, funny Instagram comic about a hamster couple in love.
+    contents: `Design the series bible for an ongoing Instagram comic about a hamster couple
+in love. Warm, funny, quietly observant about real relationships.
 
-User's brief: ${brief || 'Surprise me. Make it warm, funny and very shareable.'}
+User's brief: ${brief || 'Surprise me. Make it warm, funny and genuinely charming.'}
 
-Requirements:
-- The two hamsters must be visually DISTINCT from each other and easy to tell apart at a glance
-  (different fur colour, different markings, different silhouette).
-- Appearance descriptions must be concrete and repeatable, because an image model will re-read
-  them every single day for months. Avoid vague words like "cute" or "nice".
-- The art style must be one consistent, appealing look that suits Instagram.
-- Give them names that are short and memorable.`,
+THE ART STYLE IS FIXED. Write it as: painterly storybook illustration, soft
+gouache and watercolour texture, visible brushwork, warm cosy lighting, gentle
+paper grain, harmonious slightly desaturated palette. Hand-painted, never glossy
+3D and never flat vector. Name 4 or 5 specific palette colours.
+
+CHARACTER DESIGN RULES, these matter more than anything else:
+- The two must be distinguishable INSTANTLY at thumbnail size, by silhouette
+  alone. Different body shape, different ear shape, different fur length.
+- Different fur colours that stay distinct in warm lamplight. Do not pick two
+  similar browns.
+- Give each ONE signature item they always have. A scarf, a bent whisker, a
+  patch over one eye, a chipped ear. Something an image model can reliably repeat.
+- Appearance must be concrete and physical. An image model re-reads these exact
+  words every day for months. Write "rounded ears with a notch in the left one"
+  not "cute ears". Never use the words cute, adorable, nice or lovely.
+- Personalities should CONTRAST, so scenes have built-in friction. One tidy and
+  one chaotic, one anxious and one breezy. That contrast is the comedy engine.
+- Short, memorable names, easy to say aloud.
+
+The world should be a cosy, specific home with a few recurring rooms, so
+episodes have somewhere to live.
+
+neverDo should list things that would break the style or the tone.`,
     config: { responseMimeType: 'application/json', responseSchema: BIBLE_SCHEMA, temperature: 1.0 },
   });
   return JSON.parse(res.text);
@@ -95,11 +115,13 @@ ${b.world}
 ## ${b.hamsterA.name}
 
 - **Appearance:** ${b.hamsterA.appearance}
+- **Always has:** ${b.hamsterA.signatureItem ?? "nothing in particular"}
 - **Personality:** ${b.hamsterA.personality}
 
 ## ${b.hamsterB.name}
 
 - **Appearance:** ${b.hamsterB.appearance}
+- **Always has:** ${b.hamsterB.signatureItem ?? "nothing in particular"}
 - **Personality:** ${b.hamsterB.personality}
 
 ## Never do
@@ -114,6 +136,7 @@ async function sheetFor(hamster, artStyle, label) {
   const description = [
     'Name: ' + hamster.name,
     'Appearance: ' + hamster.appearance,
+    'Always has: ' + hamster.signatureItem,
     'Art style: ' + artStyle,
   ].join('\n');
 

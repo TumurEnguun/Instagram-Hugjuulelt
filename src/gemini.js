@@ -7,6 +7,10 @@
  *
  * Uses the stable models.generateContent path, not the experimental
  * interactions API, so this keeps working unattended.
+ *
+ * The prompts below run unchanged every day for months. Vague instructions
+ * produce vague output forever, so they are deliberately specific about what
+ * makes an episode funny and what makes a panel readable.
  */
 import { GoogleGenAI } from '@google/genai';
 import sharp from 'sharp';
@@ -25,16 +29,17 @@ const EPISODE_SCHEMA = {
     scene: {
       type: 'string',
       description:
-        'A vivid single-image visual description of this episode. Describe only what is VISIBLE: setting, what each hamster is doing, expressions, props, lighting, time of day. Do not mention panels, text, speech bubbles or captions.',
+        'A vivid description of ONE still image. Name the setting, the time of day, what each hamster is physically doing, their facial expressions, and the key props. Describe only what a viewer could see. Never mention panels, text, speech bubbles or captions.',
     },
     caption: {
       type: 'string',
-      description: 'Instagram caption. Cute and funny, 1-3 short sentences. May use a few emoji.',
+      description:
+        'The Instagram caption, which must carry the punchline. One or two short sentences, conversational, dry rather than shouty. At most one emoji, often none.',
     },
     hashtags: {
       type: 'array',
       items: { type: 'string' },
-      description: '8-12 relevant hashtags, without the # symbol.',
+      description: '8 to 12 relevant hashtags, without the # symbol.',
     },
     arcNote: {
       type: 'string',
@@ -42,7 +47,7 @@ const EPISODE_SCHEMA = {
     },
     arcUpdate: {
       type: 'string',
-      description: 'Where the relationship arc stands now. Empty string if unchanged.',
+      description: 'Where the relationship stands now. Empty string if unchanged.',
     },
     newRunningGag: {
       type: 'string',
@@ -54,16 +59,20 @@ const EPISODE_SCHEMA = {
 
 /** Ask the writer model for the next episode, given everything that came before. */
 export async function writeEpisode(state, bible, { avoidScene = '' } = {}) {
-  const recent = state.episodes.slice(-15).map((e) => `${e.n}. ${e.summary}`).join('\n') || '(none yet, this is episode 1)';
+  const recent =
+    state.episodes.slice(-20).map((e) => `${e.n}. ${e.summary}`).join('\n') ||
+    '(none yet, this is the very first episode)';
 
-  const prompt = `You write an ongoing, wholesome, funny Instagram comic series about a hamster couple.
+  const prompt = `You write an ongoing Instagram comic about a hamster couple in love.
+It is warm, funny, and quietly observant about what being in a relationship is
+actually like. Think Sarah Andersen or a newspaper strip, not a greetings card.
 
 === SERIES BIBLE (authoritative, never contradict this) ===
 ${bible}
 
 === STORY SO FAR ===
 Episodes published: ${state.episodeCount}
-Current arc: ${state.currentArc || '(just starting out)'}
+Where the relationship is: ${state.currentArc || '(just starting out)'}
 Running gags: ${state.runningGags.join(', ') || '(none yet)'}
 
 Recent episodes:
@@ -72,14 +81,33 @@ ${recent}
 === YOUR TASK ===
 Write episode ${state.episodeCount + 1}.
 
-Rules:
-- It must feel like a continuation, not a reset. Reference the arc or a running gag when it fits naturally.
-- Do NOT repeat the situation or joke of any recent episode.
-- Keep it cute and genuinely funny. Small domestic stakes, warm ending.
-- The "scene" field must be describable in ONE still image.
-- Never describe text, words, signs, speech bubbles or captions inside the image.
-- Both hamsters should be visible unless the story genuinely calls for one.
-${avoidScene ? `\n- The following scene was just rejected. Write something clearly different:\n"${avoidScene}"` : ''}`;
+HOW TO BE FUNNY HERE:
+- Specificity is what lands. Not "they cook dinner" but "he has alphabetised the
+  seed jars and she has just put one back in the wrong place".
+- Comedy comes from small domestic truths, not from big events. Someone hogging
+  the blanket. Pretending to like a gift. Losing an argument on purpose.
+- Give one of them a want and the other an obstacle. That is the whole engine.
+- Subvert the obvious ending. If a setup points one way, land it slightly askew.
+- Let them be a little flawed. Perfectly sweet characters are boring.
+- Never explain the joke. The caption should land it and stop.
+
+HARD RULES:
+- It must continue the story, not reset it. Reference the arc or a running gag
+  when it fits naturally, but do not force one in every time.
+- Do NOT reuse the situation, setting or joke of any recent episode above.
+- The scene must be ONE still image with a single clear focal action, readable
+  at a glance on a phone screen.
+- Both hamsters visible unless the story genuinely needs only one.
+- No text, words, signs, speech bubbles or captions inside the image.
+- Vary it: change the time of day, the room, the mood, who drives the scene.
+  Some episodes should be quiet and tender rather than a gag.
+
+THE CAPTION:
+- It carries the punchline. The image sets up, the caption pays off.
+- One or two short sentences. Dry, understated, human.
+- No "Swipe up", no "Tag someone who", no engagement bait, no hashtags in it.
+- At most one emoji, and usually zero.
+${avoidScene ? `\nThe following scene was just rejected. Write something clearly different:\n"${avoidScene}"` : ''}`;
 
   const res = await ai().models.generateContent({
     model: models.writer,
@@ -87,7 +115,7 @@ ${avoidScene ? `\n- The following scene was just rejected. Write something clear
     config: {
       responseMimeType: 'application/json',
       responseSchema: EPISODE_SCHEMA,
-      temperature: 1.0,
+      temperature: 1.1,
     },
   });
 
@@ -119,24 +147,40 @@ function extractImage(res) {
  * Returns a JPEG buffer, because Instagram accepts nothing else.
  */
 export async function drawPanel(scene, bible, refs) {
-  const prompt = `Illustrate this scene as a single finished image.
+  const prompt = `Illustrate this scene as a single finished storybook illustration.
 
 === ART AND CHARACTER BIBLE (follow exactly) ===
 ${bible}
 
 === CHARACTER REFERENCES ===
-The attached images define exactly what these two hamsters look like. Reproduce their
-fur colour, markings, body shape, ear shape and proportions faithfully. They must be
-instantly recognisable as the same characters.
+The attached images define exactly what these two hamsters look like. Reproduce
+their fur colour, markings, body shape, ear shape, proportions and any signature
+item faithfully. A reader must recognise them instantly as the same characters
+they saw yesterday.
 
 === SCENE ===
 ${scene}
 
+=== HOW TO PAINT IT ===
+- Painterly storybook illustration: visible brushwork, soft gouache and
+  watercolour texture, gentle paper grain. Hand-painted, never glossy or plastic.
+- Warm, cosy light with a clear source. Lamplight, late afternoon sun, candles.
+  Let it pool and fall off into soft shadow.
+- One unmistakable focal point. The composition must read instantly as a
+  thumbnail on a phone.
+- Faces carry the emotion. Expressions should be readable and specific, not a
+  default smile.
+- Rich but restrained palette. Harmonious, slightly desaturated, warm.
+- Environment tells the story through a few well chosen props, not clutter.
+
 === HARD RULES ===
-- No text, letters, numbers, words, signs, logos, speech bubbles or captions anywhere.
-- No watermarks or borders.
-- Full-bleed illustration that fills the entire frame.
-- Keep the art style identical to the bible and the references.`;
+- No text, letters, numbers, words, signs, logos, speech bubbles or captions
+  anywhere in the image.
+- No watermarks, borders, frames or panel dividers.
+- Full-bleed illustration filling the entire frame.
+- Correct anatomy: four limbs each, no extra or fused paws, no melted faces.
+- Do not restyle the characters. The bible and the references win over any
+  instinct to make them cuter or glossier.`;
 
   const parts = [
     { text: prompt },
@@ -169,14 +213,24 @@ ${scene}
 
 /** One-time: generate a character sheet used to lock a hamster's look. */
 export async function drawCharacterSheet(description) {
-  const prompt = `A character reference sheet for a cartoon hamster.
+  const prompt = `A character reference sheet for one hamster, painted in a warm
+storybook illustration style.
 
 ${description}
 
-Show the SAME hamster three times on a plain neutral light grey background:
-front view, three-quarter view, and side view, standing, full body, evenly lit.
-Consistent proportions and markings across all three.
-No text, no labels, no numbers, no borders, no shadows on the background.`;
+Show the SAME hamster three times against a plain, flat, pale cream background:
+full body front view, full body three-quarter view, and full body side view.
+Standing upright, evenly and softly lit, identical proportions, fur colours and
+markings across all three. Neutral friendly expression.
+
+Painterly gouache and watercolour texture with visible brushwork and soft edges.
+Hand-painted storybook feel, not glossy 3D, not vector, not photographic.
+
+The design must be simple enough to redraw identically hundreds of times, and
+distinctive enough to recognise instantly at thumbnail size.
+
+No text, no labels, no numbers, no arrows, no borders, no drop shadows, no
+background scenery.`;
 
   const res = await ai().models.generateContent({
     model: models.artist,
