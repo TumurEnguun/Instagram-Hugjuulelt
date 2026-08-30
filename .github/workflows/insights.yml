@@ -1,0 +1,50 @@
+name: Weekly insights
+
+# Sunday evening in Ulaanbaatar (12:00 UTC = 20:00 local).
+# Several slots because GitHub drops most scheduled runs; a once-per-day
+# guard in insights.js means only the first that fires sends the report.
+on:
+  schedule:
+    - cron: '3 12 * * 0'
+    - cron: '9 13 * * 0'
+    - cron: '17 14 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: hamster-bot
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      IG_USER_ID: ${{ secrets.IG_USER_ID }}
+      IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
+      FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+      FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      GITHUB_BRANCH: ${{ github.ref_name }}
+
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+
+      - run: node src/insights.js --send
+
+      - name: Record that the report went out
+        if: always()
+        run: |
+          git config user.name "hamster-bot"
+          git config user.email "hamster-bot@users.noreply.github.com"
+          git add -A story-state.json
+          git diff --staged --quiet || git commit -m "Weekly insights report sent"
+          git pull --rebase --autostash origin "${GITHUB_BRANCH}"
+          git push origin HEAD:"${GITHUB_BRANCH}"

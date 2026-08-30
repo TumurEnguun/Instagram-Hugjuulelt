@@ -15,6 +15,7 @@
 import './config.js';
 import { retryFetch } from './net.js';
 import { sendMessage } from './telegram.js';
+import { readState, writeState } from './store.js';
 
 const IG = 'https://graph.instagram.com/v25.0';
 const FB = 'https://graph.facebook.com/v25.0';
@@ -137,6 +138,16 @@ async function main() {
   }
 
   if (process.argv.includes('--send')) {
+    // The weekly job runs from several slots because GitHub drops most
+    // scheduled runs. Whichever fires first sends; the rest stop here.
+    const day = new Date().toISOString().slice(0, 10);
+    const state = readState();
+    if (state.lastReportOn === day && !process.argv.includes('--force')) {
+      console.log('Report already sent today. Skipping.');
+      return;
+    }
+    writeState({ ...state, lastReportOn: day });
+
     await sendMessage(`<b>Insights</b>\n\n<pre>${out.join('\n').replace(/[<>&]/g, (c) => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]))}</pre>`);
     console.log('\nSent to Telegram.');
   }
