@@ -1,23 +1,30 @@
 /**
- * Gets a never-expiring Facebook Page access token.
+ * Gets a never-expiring Facebook Page access token and writes it into .env.
  *
  *   npm run fb-setup
  *
- * Facebook makes this needlessly awkward. The Graph API Explorer hands you a
- * USER token that dies in an hour or two, and a Page token derived from it dies
- * with it. The trick is to exchange the short-lived user token for a long-lived
- * one first: Page tokens derived from a long-lived user token do not expire at
- * all, which is exactly what an unattended bot needs.
+ * Facebook has three token tiers, and only the last one is any use to a bot:
  *
- * This script does that exchange and prints what to paste into .env.
+ *   short-lived user token   what the Graph API Explorer hands you, ~1-2 hours
+ *   long-lived user token    requires the App Secret to obtain, 60 days
+ *   PAGE token derived from a long-lived user token   never expires
+ *
+ * A Page token inherits the lifetime of whatever produced it, so deriving one
+ * straight from the Explorer's token gives you something that dies the same
+ * day. The exchange in the middle is the entire point of this script.
+ *
+ * Values are read from .env when present (META_APP_ID, META_APP_SECRET,
+ * FB_USER_TOKEN) and prompted for otherwise. The resulting Page token is
+ * written straight into .env, so there is no line to copy wrongly.
  */
+import fs from 'node:fs';
 import readline from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
-import './config.js';
+import { ROOT } from './config.js';
 import { retryFetch } from './net.js';
 
 const GRAPH = 'https://graph.facebook.com/v25.0';
-const rl = readline.createInterface({ input: stdin, output: stdout });
+const ENV = ROOT + '/.env';
 
 async function graph(pathname, params) {
   const url = new URL(GRAPH + pathname);
@@ -28,66 +35,94 @@ async function graph(pathname, params) {
   return json;
 }
 
+/** Set a key in .env, replacing any existing line for it. */
+function setEnv(key, value) {
+  let env = fs.existsSync(ENV) ? fs.readFileSync(ENV, 'utf8') : '';
+  const line = `${key}=${value}`;
+  const re = new RegExp(`^${key}=.*$`, 'm');
+  env = re.test(env) ? env.replace(re, line) : env.trimEnd() + '\n' + line + '\n';
+  fs.writeFileSync(ENV, env);
+}
+
 async function main() {
-  console.log('\n=== Facebook Page token setup ===\n');
-  console.log('First, get a short-lived user token:');
-  console.log('  1. Open https://developers.facebook.com/tools/explorer');
-  console.log('  2. Pick your app (Hamster-bot) in the top right');
-  console.log('  3. Click "Add a Permission" and tick:');
-  console.log('       pages_show_list');
-  console.log('       pages_manage_posts');
-  console.log('       pages_manage_engagement');
-  console.log('');
-  console.log('     Tick ONLY those three. pages_read_engagement and');
-  console.log('     pages_read_user_content are not available to this kind of app');
-  console.log('     and cause an Invalid Scopes error.');
-  console.log('  4. Click "Generate Access Token" and approve');
-  console.log('  5. Copy the token it shows\n');
+  let appId = process.env.META_APP_ID;
+  let appSecret = process.env.META_APP_SECRET;
+  let userToken = process.env.FB_USER_TOKEN;
 
-  const appId = (await rl.question('Your Meta App ID: ')).trim();
-  const appSecret = (await rl.question('Your Meta App Secret: ')).trim();
-  const shortToken = (await rl.question('The token you just copied: ')).trim();
+  if (!appId || !appSecret || !userToken) {
+    console.log('\n=== Facebook Page token setup ===\n');
+    console.log('Get a fresh user token first:');
+    console.log('  1. https://developers.facebook.com/tools/explorer');
+    console.log('  2. Meta App: Hamster-bot');
+    console.log('  3. User or Page: USER TOKEN  (not the Page)');
+    console.log('  4. Permissions: pages_show_list, pages_manage_posts,');
+    console.log('                  pages_manage_engagement, pages_read_engagement');
+    console.log('  5. Generate Access Token, approve, copy it');
+    console.log('');
+    console.log('It expires in about an hour, so do this right before continuing.\n');
 
-  if (!appId || !appSecret || !shortToken) {
-    throw new Error('All three values are required.');
+    const rl = readline.createInterface({ input: stdin, output: stdout });
+    appId = appId || (await rl.question('Meta App ID: ')).trim();
+    appSecret = appSecret || (await rl.question('Meta App Secret: ')).trim();
+    userToken = userToken || (await rl.question('The user token: ')).trim();
+    rl.close();
+  } else {
+    console.log('\nUsing META_APP_ID, META_APP_SECRET and FB_USER_TOKEN from .env\n');
   }
 
-  console.log('\nExchanging for a long-lived token...');
+  if (!appId || !appSecret || !userToken) throw new Error('All three values are required.');
+
+  console.log('Exchanging for a long-lived user token...');
   const longLived = await graph('/oauth/access_token', {
     grant_type: 'fb_exchange_token',
     client_id: appId,
     client_secret: appSecret,
-    fb_exchange_token: shortToken,
+    fb_exchange_token: userToken,
   });
-  console.log('  done');
+  const days = longLived.expires_in ? Math.round(longLived.expires_in / 86400) : null;
+  console.log(`  got one${days ? `, valid ~${days} days` : ''}`);
 
-  console.log('Fetching your Pages...');
-  const pages = await graph('/me/accounts', { access_token: longLived.access_token });
+  console.log('Deriving the Page token from it...');
+  const pages = await graph('/me/accounts', {
+    fields: 'id,name,access_token',
+    access_token: longLived.access_token,
+  });
+  if (!pages.data?.length) throw new Error('No Pages found. Check pages_show_list was granted.');
 
-  if (!pages.data?.length) {
-    throw new Error('No Pages found on this account. Check you granted pages_show_list.');
-  }
+  const wanted = process.env.FB_PAGE_ID;
+  const page = pages.data.find((p) => p.id === wanted) ?? pages.data[0];
+  if (!page.access_token) throw new Error('Facebook returned no Page token.');
 
-  console.log('\n=== Paste these into .env ===\n');
-  for (const page of pages.data) {
-    console.log(`# ${page.name}`);
-    console.log(`FB_PAGE_ID=${page.id}`);
-    console.log(`FB_PAGE_ACCESS_TOKEN=${page.access_token}`);
-    console.log('');
-  }
+  // Confirm it really is non-expiring before claiming so.
+  const check = await graph('/debug_token', {
+    input_token: page.access_token,
+    access_token: `${appId}|${appSecret}`,
+  });
+  const expiresAt = check.data?.expires_at;
+  const permanent = expiresAt === 0 || expiresAt === undefined;
+
+  setEnv('FB_PAGE_ID', page.id);
+  setEnv('FB_PAGE_ACCESS_TOKEN', page.access_token);
+
+  console.log('');
+  console.log(`Wrote FB_PAGE_ID and FB_PAGE_ACCESS_TOKEN into .env for "${page.name}".`);
+  console.log(
+    permanent
+      ? '  This token does NOT expire.'
+      : `  WARNING: it still expires at ${new Date(expiresAt * 1000).toISOString()}. ` +
+        'The user token was probably not long-lived. Try again with a fresh one.'
+  );
+  console.log('');
+  console.log('Now update the same two values in GitHub Secrets, then: npm run doctor');
 
   if (pages.data.length > 1) {
-    console.log('More than one Page listed. Use the pair for the Page you want to post to.\n');
+    console.log('\nOther Pages on this account:');
+    for (const p of pages.data) if (p.id !== page.id) console.log(`  ${p.id}  ${p.name}`);
   }
-  console.log('This Page token does not expire, so unlike the Instagram one it');
-  console.log('never needs refreshing. Then run: npm run doctor\n');
-
-  rl.close();
 }
 
 main().catch((err) => {
   console.error('\nFailed: ' + err.message);
   if (process.env.DEBUG) console.error(err.stack);
-  rl.close();
   process.exit(1);
 });
