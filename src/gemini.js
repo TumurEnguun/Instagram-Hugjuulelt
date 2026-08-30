@@ -58,27 +58,55 @@ const EPISODE_SCHEMA = {
 };
 
 /**
- * Rotating beat types.
+ * Rotating situations.
  *
- * Left to itself the writer converges hard on one joke shape. Three test
- * episodes in a row all came out as "Ichigo takes up space, Teddy endures",
- * which is fine once and deadly across a month of daily posts. Cycling the beat
- * forces variety in who drives the scene and what the episode is even for.
+ * These are deliberately UNIVERSAL couple moments rather than abstract story
+ * shapes. An earlier version described structure ("Teddy over-engineers
+ * something") and produced clever episodes that nobody recognised themselves
+ * in. Saves and shares stayed at zero, and those are the signals that reach
+ * people who do not already follow the account.
+ *
+ * A reader should look at the picture and think "that is literally us" before
+ * they finish the caption. That reaction is what gets a post sent to someone.
  */
 const BEATS = [
-  'ICHIGO CAUSES IT. She does something impulsive or sassy, and Teddy deals with the fallout with calm logic.',
-  'TEDDY CAUSES IT. He over-thinks or over-engineers something simple, and Ichigo punctures it in one move.',
-  'QUIET AND TENDER. No gag. A small, warm, wordless moment between them. Let it be genuinely sweet.',
-  'AN OUTSIDE PROBLEM. Something in the flat goes wrong. They deal with it together, badly.',
-  'ROLE REVERSAL. Ichigo is unusually sensible, or Teddy is unexpectedly reckless. Play against type.',
-  'A SMALL VICTORY. They want the same thing and actually get it. Warm, satisfying, low conflict.',
-  'ICHIGO IS SOFT. She gets caught being openly affectionate and cannot play it off.',
-  'DOMESTIC FRICTION. A tiny disagreement about how something should be done. Nobody really wins.',
+  'THE BLANKET. One of them has ended up with almost all of it. Nobody is admitting anything.',
+  'WHAT DO YOU WANT TO EAT. Neither will pick. Both have opinions about every suggestion.',
+  'FELL ASLEEP MID-THING. One drifted off partway through something they insisted they were enjoying.',
+  'THE HUMAN RADIATOR. One is freezing and has decided the other is now a heat source.',
+  'ALMOST READY. One has been ready for ages and is waiting, with visible patience, for the other.',
+  'I ORDERED MY OWN. One is eating off the other plate anyway, having sworn they were not hungry.',
+  'I AM FINE. One is very obviously not fine. The other knows better than to say so directly.',
+  'HOLD THIS. One has become a shelf for the other belongings without being consulted.',
+  'THE SYSTEM. One has reorganised something the other had a perfectly good system for.',
+  'BOUGHT IT KNOWING. One bought a snack fully aware they would be handing over half of it.',
+  'SILENT REPAIR. One knocked something over. The other is fixing it without a single word about it.',
+  'TRYING TO BE QUIET. One is asleep. The other is failing, loudly, to do something considerately.',
+  'THE RIGHT WAY. A tiny disagreement about the correct method for an utterly trivial chore.',
+  'JUST SITTING CLOSER. One is quietly having a bad day. The other says nothing and moves nearer.',
+  'ONE SCREEN, TWO FACES. Watching or looking at the same small thing together, heads touching.',
+  'NOT EVEN TIRED. One has firmly announced they are not tired. They are asleep in the next moment.',
+  'THE LONG STORY. One is telling a very detailed story. The other is listening with real affection.',
+  'CAUGHT LOOKING. One glances over fondly and is caught doing it. Neither mentions it.',
 ];
 
 /** Ask the writer model for the next episode, given everything that came before. */
 export async function writeEpisode(state, bible, { avoidScene = '' } = {}) {
   const beat = BEATS[state.episodeCount % BEATS.length];
+
+  // Alternate who is the cause and who reacts. BEATS.length is even, so the
+  // two rotations would otherwise stay in lockstep and pair each situation
+  // with the same driver forever.
+  // Weighted towards Teddy on purpose. Ichigo acting first is written into her
+  // character, so an even split still produced four Ichigo-driven episodes out
+  // of six. Asking for Teddy more often is what actually lands near 50/50.
+  const drivers = [
+    'ICHIGO is the one doing it. Teddy reacts.',
+    'TEDDY is the one doing it. Ichigo reacts.',
+    'TEDDY is the one doing it. Ichigo reacts.',
+    'BOTH are equally guilty, or it is nobody fault. Play it as a shared moment.',
+  ];
+  const driver = drivers[state.episodeCount % drivers.length];
   const recent =
     state.episodes.slice(-20).map((e) => `${e.n}. ${e.summary}`).join('\n') ||
     '(none yet, this is the very first episode)';
@@ -101,21 +129,38 @@ ${recent}
 === YOUR TASK ===
 Write episode ${state.episodeCount + 1}.
 
-THIS EPISODE'S REQUIRED BEAT:
+THIS EPISODE'S SITUATION:
 ${beat}
 
-Follow that beat. It exists so the series does not become the same joke told
-forty different ways.
+WHO DRIVES IT THIS TIME: ${driver}
+
+Follow both. They exist because left alone this series collapses into one joke:
+Ichigo does something and Teddy patiently endures it. Six consecutive test
+episodes all opened with "She", which is one-note across a feed and only lets
+half the audience recognise themselves. Whoever is named above is the one being
+the human here; the other one reacts.
+
+THE ONE TEST THAT MATTERS:
+Would someone see this and send it to their partner saying "this is us"?
+That reaction is the entire goal. It is what makes a post get shared, which is
+what reaches people who do not follow the account yet. A post that is merely
+clever gets a polite like and goes nowhere.
+
+So the situation must be one that MANY couples have lived, not a quirky thing
+only these two would do. The hamsters are how it is told; the moment itself has
+to belong to the reader.
 
 HOW TO BE FUNNY HERE:
-- Specificity is what lands. Not "they cook dinner" but "he has alphabetised the
-  seed jars and she has just put one back in the wrong place".
-- Comedy comes from small domestic truths, not from big events. Someone hogging
-  the blanket. Pretending to like a gift. Losing an argument on purpose.
+- Universal situation, specific detail. Everyone knows the blanket argument.
+  Nobody has seen it lost by a hamster who is simply too round to hold an edge.
+- Comedy comes from small domestic truths, not big events. Recognition first,
+  jokes second. If it is warm and true but barely funny, that is fine.
 - Give one of them a want and the other an obstacle. That is the whole engine.
-- Subvert the obvious ending. If a setup points one way, land it slightly askew.
-- Let them be a little flawed. Perfectly sweet characters are boring.
-- Never explain the joke. The caption should land it and stop.
+- Land it slightly askew. If the setup points one way, take the small turn.
+- Let them be a little flawed. Perfectly sweet characters are boring and
+  nobody recognises themselves in them.
+- Never explain the joke. The caption lands it and stops.
+- Never be mean. The reader should feel fond of both of them, always.
 
 HARD RULES:
 - It must continue the story, not reset it. Reference the arc or a running gag
