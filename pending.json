@@ -1,29 +1,30 @@
 {
   "status": "awaiting",
   "episodeNumber": 2,
-  "attempt": 1,
+  "attempt": 2,
   "episode": {
-    "title": "Structural Integrity",
-    "scene": "Evening in the attic bedroom, illuminated by the warm honey glow of a brass bedside lamp that pools light across a patchwork rug. Teddy, the large shaggy apricot Syrian hamster, sits back on his haunches with his tiny paws frozen mid-air, looking down at his handiwork with wide, solid glossy black bead eyes. Around him lie meticulously arranged concentric rings of shredded cream linen, dried sage sprigs, and combed wool. In the absolute centre of this precise architecture, a deep collapsed trench leads straight to Ichigo, the tiny silvery dwarf hamster, who has already curled herself into a tight, contented ball in the warmest hollow, her glossy black bead eyes half-lidded and serene amidst the wreckage.",
-    "caption": "Teddy spent forty-five minutes calculating the optimal insulation density of the evening nest. Ichigo required three seconds.",
+    "title": "The Incline",
+    "scene": "Late afternoon in the attic living room, where warm honey-gold sunlight slants across wide wooden floorboards and pools at the base of the sagging patchwork sofa. Teddy, the large shaggy apricot Syrian hamster, crouches on his haunches on the floor, stubby front paws meticulously adjusting a graduated ramp made of stacked wooden dominoes and a vintage thread spool. His round, solid glossy black bead eyes are fixed in deep concentration on the alignment of the final block. Above him, already perched casually on the high sofa cushion, Ichigo, the tiny silvery dwarf hamster with her sleek grey stripe, sits grooming her left ear with a tiny white paw, looking down at his engineering project with bright, dark bead eyes.",
+    "caption": "He had spent twenty minutes calculating the optimal gradient.",
     "hashtags": [
-      "hamsterlife",
+      "hamsters",
+      "hamstercomic",
       "webcomic",
-      "couplegoals",
-      "hamstersofinstagram",
-      "cozyart",
+      "couplescomic",
+      "sliceoflife",
       "illustration",
-      "storybookart",
-      "relatablecouples",
-      "dailystrip"
+      "relatable",
+      "cottagecore",
+      "storyart",
+      "comicstrip"
     ],
-    "arcNote": "Teddy meticulously over-engineered their bedtime nest only for Ichigo to bulldoze directly into the middle of it.",
+    "arcNote": "Teddy over-engineered a ramp to the sofa that Ichigo bypassed immediately.",
     "arcUpdate": "",
     "newRunningGag": ""
   },
-  "filename": "ep-0002-v1.jpg",
+  "filename": "ep-0002-v2.jpg",
   "aspectRatio": "4:5",
-  "telegramMessageId": 26,
-  "lastUpdateId": 0,
-  "createdAt": "2026-08-30T17:33:40.395Z"
+  "telegramMessageId": 27,
+  "lastUpdateId": 558643569,
+  "createdAt": "2026-08-30T18:24:12.232Z"
 }
