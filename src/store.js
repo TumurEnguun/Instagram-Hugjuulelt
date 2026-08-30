@@ -43,14 +43,21 @@ export function readBible() {
   return fs.readFileSync(paths.bible, 'utf8');
 }
 
-/** Load the locked character reference images as base64, ready for Gemini. */
+/**
+ * Load the locked character reference images as base64, ready for Gemini.
+ *
+ * gemini-3-pro-image accepts at most 5 character reference images. Keep the set
+ * BALANCED: feeding three sheets of one hamster and one of the other biases
+ * every generation toward whoever is over-represented. Extra sheets live in
+ * characters/extra/ and are ignored here.
+ */
 export function readCharacterRefs() {
   if (!fs.existsSync(paths.characters)) return [];
   const files = fs.readdirSync(paths.characters)
     .filter((f) => /\.(jpe?g|png)$/i.test(f))
     .sort();
-  // The model accepts up to 4 character reference images per request.
-  return files.slice(0, 4).map((f) => ({
+
+  return files.slice(0, 5).map((f) => ({
     name: f,
     mimeType: /\.png$/i.test(f) ? 'image/png' : 'image/jpeg',
     data: fs.readFileSync(`${paths.characters}/${f}`).toString('base64'),

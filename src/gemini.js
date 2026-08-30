@@ -57,8 +57,28 @@ const EPISODE_SCHEMA = {
   required: ['title', 'scene', 'caption', 'hashtags', 'arcNote'],
 };
 
+/**
+ * Rotating beat types.
+ *
+ * Left to itself the writer converges hard on one joke shape. Three test
+ * episodes in a row all came out as "Ichigo takes up space, Teddy endures",
+ * which is fine once and deadly across a month of daily posts. Cycling the beat
+ * forces variety in who drives the scene and what the episode is even for.
+ */
+const BEATS = [
+  'ICHIGO CAUSES IT. She does something impulsive or sassy, and Teddy deals with the fallout with calm logic.',
+  'TEDDY CAUSES IT. He over-thinks or over-engineers something simple, and Ichigo punctures it in one move.',
+  'QUIET AND TENDER. No gag. A small, warm, wordless moment between them. Let it be genuinely sweet.',
+  'AN OUTSIDE PROBLEM. Something in the flat goes wrong. They deal with it together, badly.',
+  'ROLE REVERSAL. Ichigo is unusually sensible, or Teddy is unexpectedly reckless. Play against type.',
+  'A SMALL VICTORY. They want the same thing and actually get it. Warm, satisfying, low conflict.',
+  'ICHIGO IS SOFT. She gets caught being openly affectionate and cannot play it off.',
+  'DOMESTIC FRICTION. A tiny disagreement about how something should be done. Nobody really wins.',
+];
+
 /** Ask the writer model for the next episode, given everything that came before. */
 export async function writeEpisode(state, bible, { avoidScene = '' } = {}) {
+  const beat = BEATS[state.episodeCount % BEATS.length];
   const recent =
     state.episodes.slice(-20).map((e) => `${e.n}. ${e.summary}`).join('\n') ||
     '(none yet, this is the very first episode)';
@@ -80,6 +100,12 @@ ${recent}
 
 === YOUR TASK ===
 Write episode ${state.episodeCount + 1}.
+
+THIS EPISODE'S REQUIRED BEAT:
+${beat}
+
+Follow that beat. It exists so the series does not become the same joke told
+forty different ways.
 
 HOW TO BE FUNNY HERE:
 - Specificity is what lands. Not "they cook dinner" but "he has alphabetised the
@@ -105,6 +131,10 @@ HARD RULES:
 THE CAPTION:
 - It carries the punchline. The image sets up, the caption pays off.
 - One or two short sentences. Dry, understated, human.
+- VOICE, and this never changes: a wry third-person observer watching them.
+  Refer to them as "he", "she", "Teddy", "Ichigo". NEVER write "I", "we", "my"
+  or "our". The narrator is not one of the hamsters and never addresses the
+  reader.
 - No "Swipe up", no "Tag someone who", no engagement bait, no hashtags in it.
 - At most one emoji, and usually zero.
 ${avoidScene ? `\nThe following scene was just rejected. Write something clearly different:\n"${avoidScene}"` : ''}`;
@@ -211,17 +241,25 @@ ${scene}
   throw lastErr;
 }
 
-/** One-time: generate a character sheet used to lock a hamster's look. */
-export async function drawCharacterSheet(description) {
+/**
+ * One-time: generate a character sheet used to lock a hamster's look.
+ *
+ * Pass `refs` (already approved sheets of the SAME character) to generate extra
+ * angles that actually match. Without them the model re-interprets the text
+ * description from scratch and you get a sibling, not the same hamster.
+ */
+export async function drawCharacterSheet(description, { refs = [], layout = '' } = {}) {
   const prompt = `A character reference sheet for one hamster, painted in a warm
 storybook illustration style.
 
-${description}
+${refs.length ? `The attached image or images show this exact character, already approved.
+Match them precisely: same fur colour, same markings, same fur length and
+texture, same proportions, same face. Do not redesign or restyle anything. You
+are drawing the SAME individual from new angles.
 
-Show the SAME hamster three times against a plain, flat, pale cream background:
-full body front view, full body three-quarter view, and full body side view.
-Standing upright, evenly and softly lit, identical proportions, fur colours and
-markings across all three. Neutral friendly expression.
+` : ''}${description}
+
+${layout}
 
 Painterly gouache and watercolour texture with visible brushwork and soft edges.
 Hand-painted storybook feel, not glossy 3D, not vector, not photographic.
@@ -232,9 +270,14 @@ distinctive enough to recognise instantly at thumbnail size.
 No text, no labels, no numbers, no arrows, no borders, no drop shadows, no
 background scenery.`;
 
+  const parts = [
+    { text: prompt },
+    ...refs.map((r) => ({ inlineData: { mimeType: r.mimeType, data: r.data } })),
+  ];
+
   const res = await ai().models.generateContent({
     model: models.artist,
-    contents: prompt,
+    contents: [{ role: 'user', parts }],
     config: {
       responseModalities: ['IMAGE'],
       imageConfig: { aspectRatio: '4:3', imageSize: image.size },
