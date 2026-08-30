@@ -7,7 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { paths } from './config.js';
-import { propose } from './decide.js';
+import { propose, today } from './decide.js';
 import { writeEpisode, drawPanel } from './gemini.js';
 import { readState, readBible, readCharacterRefs, readPending } from './store.js';
 import { sendMessage } from './telegram.js';
@@ -46,6 +46,14 @@ async function main() {
       'Morning. No post today: the characters have not been created yet.\n\n' +
         'Run <code>npm run bootstrap</code> when you are ready, and I will start posting the day after.'
     );
+    return;
+  }
+
+  // propose runs from several cron slots because GitHub drops most scheduled
+  // runs. Whichever one actually fires does the work; the rest stop here.
+  const state = readState();
+  if (state.lastProposedOn === today()) {
+    console.log(`Already proposed today (${state.lastProposedOn}). Nothing to do.`);
     return;
   }
 

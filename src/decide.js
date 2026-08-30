@@ -66,9 +66,17 @@ export async function propose({ mode = 'new', previous = null } = {}) {
     createdAt: new Date().toISOString(),
   });
 
+  // Record that today's proposal exists. GitHub drops most scheduled runs, so
+  // propose is scheduled several times each morning; this is what stops the
+  // later attempts producing a second post for the same day.
+  writeState({ ...readState(), lastProposedOn: today() });
+
   console.log(`Proposal sent to Telegram: ${filename} (${aspectRatio})`);
   return { episodeNumber, filename };
 }
+
+/** UTC date stamp, e.g. 2026-08-30. All the retry slots fall on one UTC day. */
+export const today = () => new Date().toISOString().slice(0, 10);
 
 /** Build the final Instagram caption from the episode. */
 function buildCaption(episode) {
