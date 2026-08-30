@@ -45,12 +45,29 @@ export async function publishPhoto(imageUrl, caption) {
   return json.post_id ?? json.id;
 }
 
-/** Sanity check used by doctor, so a bad Page token is caught before posting. */
+/**
+ * Sanity check used by doctor.
+ *
+ * Reading a Page's own name needs `pages_read_engagement`, which this app is
+ * not granted, while publishing only needs `pages_manage_posts`, which it is.
+ * So a read failure of that specific kind says nothing about whether posting
+ * works, and must not be reported as a broken setup.
+ *
+ * Returns { name } when the read succeeds, or { unverified: true } when the
+ * only thing blocking it is the missing read permission.
+ */
 export async function checkPage() {
   if (!isConfigured()) return null;
+
   const url = `${GRAPH}/${optional('FB_PAGE_ID')}?fields=id,name&access_token=${encodeURIComponent(optional('FB_PAGE_ACCESS_TOKEN'))}`;
   const res = await retryFetch(url);
   const json = await res.json().catch(() => ({}));
-  if (json.error) throw new Error(json.error.message);
-  return json;
+
+  if (!json.error) return { name: json.name, verified: true };
+
+  const msg = json.error.message ?? '';
+  if (/pages_read_engagement|Page Public (Content|Metadata) Access/i.test(msg)) {
+    return { unverified: true };
+  }
+  throw new Error(msg);
 }

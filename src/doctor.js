@@ -221,7 +221,11 @@ async function checkFacebook() {
   }
   try {
     const page = await checkPage();
-    ok('Facebook Page', 'connected to ' + page.name);
+    if (page.unverified) {
+      ok('Facebook Page', 'token present; read is blocked but publishing should work');
+    } else {
+      ok('Facebook Page', 'connected to ' + page.name);
+    }
   } catch (err) {
     bad('Facebook Page', err.message.slice(0, 140));
   }
