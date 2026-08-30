@@ -1,3 +1,30 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 1,
+  "attempt": 1,
+  "episode": {
+    "title": "Cheek Capacity",
+    "scene": "Late afternoon in the attic kitchen, with warm golden light pooling across rustic wooden floorboards. Ichigo, a tiny silvery-white dwarf hamster with a charcoal dorsal stripe, has stuffed her cheek pouches so excessively wide that she is firmly wedged mid-body in the circular entrance of a short terracotta tunnel. Her hind legs kick uselessly in the air behind her. On the other side of the tunnel sits Teddy, a massive shaggy apricot Syrian hamster, resting quietly on his haunches with his solid glossy black bead eyes fixed on her in mild, patient resignation, his stubby front paws resting neatly beside a scattered mound of pumpkin seeds.",
+    "caption": "She insisted she had room for the pumpkin seeds. She has now been negotiating terms from inside the tunnel for twelve minutes.",
+    "hashtags": [
+      "teddyandichigo",
+      "hamsterlove",
+      "webcomic",
+      "sliceoflife",
+      "relatablecouples",
+      "cozyart",
+      "illustration",
+      "comicstrip",
+      "hamstersofinstagram",
+      "cutecomics"
+    ],
+    "arcNote": "Ichigo overfilled her cheek pouches with pumpkin seeds and wedged herself in the terracotta tunnel while Teddy calmly waited for physics to run its course.",
+    "arcUpdate": "Living together in the attic flat, establishing domestic routines and stubborn negotiations.",
+    "newRunningGag": "Ichigo drastically overestimating her cheek pouch capacity."
+  },
+  "filename": "ep-0001-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 20,
+  "lastUpdateId": 0,
+  "createdAt": "2026-08-30T04:38:57.496Z"
 }
