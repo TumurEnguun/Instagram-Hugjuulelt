@@ -209,6 +209,10 @@ ${scene}
 - No watermarks, borders, frames or panel dividers.
 - Full-bleed illustration filling the entire frame.
 - Correct anatomy: four limbs each, no extra or fused paws, no melted faces.
+- EYES: large round SOLID glossy black bead eyes, exactly like a real hamster's,
+  each with a single small white catchlight. No white sclera, no visible iris or
+  pupil separation, no human-shaped eyes, no eyebrows, no eyelashes. This is the
+  difference between cute and uncanny, so treat it as absolute.
 - Do not restyle the characters. The bible and the references win over any
   instinct to make them cuter or glossier.`;
 
@@ -263,6 +267,11 @@ ${layout}
 
 Painterly gouache and watercolour texture with visible brushwork and soft edges.
 Hand-painted storybook feel, not glossy 3D, not vector, not photographic.
+
+- EYES: large round SOLID glossy black bead eyes, exactly like a real hamster's,
+  each with a single small white catchlight. No white sclera, no visible iris or
+  pupil separation, no human-shaped eyes, no eyebrows, no eyelashes. This is the
+  difference between cute and uncanny, so treat it as absolute.
 
 The design must be simple enough to redraw identically hundreds of times, and
 distinctive enough to recognise instantly at thumbnail size.
