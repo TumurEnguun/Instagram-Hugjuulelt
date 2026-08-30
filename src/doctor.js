@@ -214,6 +214,19 @@ async function checkInstagram() {
   }
 }
 
+async function checkFacebook() {
+  const { isConfigured, checkPage } = await import('./facebook.js');
+  if (!isConfigured()) {
+    return skip('Facebook Page', 'not set up, Instagram only (npm run fb-setup)');
+  }
+  try {
+    const page = await checkPage();
+    ok('Facebook Page', 'connected to ' + page.name);
+  } catch (err) {
+    bad('Facebook Page', err.message.slice(0, 140));
+  }
+}
+
 async function main() {
   console.log('\nChecking your credentials. No secret values are printed.\n');
 
@@ -221,6 +234,7 @@ async function main() {
   await checkGeminiBilling();
   await checkTelegram();
   await checkInstagram();
+  await checkFacebook();
 
   const failed = results.filter((r) => r.state === 'bad').length;
   const pending = results.filter((r) => r.state === 'skip').length;

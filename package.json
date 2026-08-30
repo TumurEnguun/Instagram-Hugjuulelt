@@ -14,7 +14,8 @@
     "propose:dry": "node src/propose.js --dry-run",
     "check": "node src/check.js",
     "refresh-token": "node src/refresh-token.js",
-    "listen": "node src/listen.js"
+    "listen": "node src/listen.js",
+    "fb-setup": "node src/fb-setup.js"
   },
   "dependencies": {
     "@google/genai": "^1.40.0",

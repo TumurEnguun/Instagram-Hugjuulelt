@@ -1,7 +1,17 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 0,
-  "currentArc": "Living together in the attic flat, comfortable with each other and still winding each other up.",
-  "runningGags": [],
-  "episodes": []
+  "episodeCount": 1,
+  "currentArc": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
+  "runningGags": [
+    "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
+  ],
+  "episodes": [
+    {
+      "n": 1,
+      "title": "A Matter of Capacity",
+      "summary": "Ichigo overfilled her cheek pouches on the kitchen counter while Teddy waited quietly with an acorn cap for the inevitable overflow.",
+      "postedAt": "2026-08-30T04:51:41.500Z",
+      "igMediaId": "17978868264115350"
+    }
+  ]
 }

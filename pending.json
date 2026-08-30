@@ -1,30 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 1,
-  "attempt": 4,
-  "episode": {
-    "title": "A Matter of Capacity",
-    "scene": "Late morning in the attic kitchen, with warm sunlight slanting across a weathered wooden countertop lined with mismatched ceramic bowls. Ichigo, tiny and silvery-white with a sleek grey dorsal stripe, stands balanced on her hind paws with both cheek pouches puffed out into two enormous, completely rigid spheres that dwarf the rest of her body. Her whiskers quiver with fierce determination as she attempts to shove a third, entirely flat dried apple ring into her already bulging mouth with both front paws. Sitting beside her, Teddy, a massive and shaggy apricot-orange Syrian hamster twice her size, rests placidly on his haunches. His solid glossy black bead eyes calmly regard her as he holds an empty, hollowed-out acorn cap in his stubby paws, resting it patiently on the wood right below her chin.",
-    "caption": "She insisted she had plenty of room left. He chose not to argue with geometry.",
-    "hashtags": [
-      "teddyandichigo",
-      "hamstercomic",
-      "webcomics",
-      "relationshipcomics",
-      "sliceoflife",
-      "couplescomic",
-      "cutehamster",
-      "storybookart",
-      "cozyvibes",
-      "comicstrip"
-    ],
-    "arcNote": "Ichigo overfilled her cheek pouches on the kitchen counter while Teddy waited quietly with an acorn cap for the inevitable overflow.",
-    "arcUpdate": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
-    "newRunningGag": "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
-  },
-  "filename": "ep-0001-v4.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 23,
-  "lastUpdateId": 558643564,
-  "createdAt": "2026-08-30T04:51:20.921Z"
+  "status": "none"
 }

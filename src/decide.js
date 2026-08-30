@@ -11,6 +11,7 @@ import { writeEpisode, drawPanel } from './gemini.js';
 import { readState, writeState, readBible, readCharacterRefs, writePending, clearPending, recordEpisode } from './store.js';
 import { sendProposal, sendMessage, ackButton, drainUpdates } from './telegram.js';
 import { publishPhoto } from './instagram.js';
+import * as facebook from './facebook.js';
 import { publicUrlFor, waitUntilReachable } from './host.js';
 
 /**
@@ -102,7 +103,22 @@ export async function applyDecision(action, pending, callbackId = null) {
         return 'image-not-reachable';
       }
 
-      const mediaId = await publishPhoto(url, buildCaption(pending.episode));
+      const caption = buildCaption(pending.episode);
+      const mediaId = await publishPhoto(url, caption);
+
+      // Facebook is a bonus channel. Instagram has already succeeded by this
+      // point, so a Facebook failure is reported but never throws: it must not
+      // leave the post half-recorded or trigger a retry that double-posts.
+      let fbNote = '';
+      if (facebook.isConfigured()) {
+        try {
+          await facebook.publishPhoto(url, caption);
+          fbNote = '\nAlso posted to your Facebook Page.';
+        } catch (err) {
+          console.warn(`Facebook cross-post failed: ${err.message}`);
+          fbNote = `\nInstagram worked, but the Facebook cross-post failed:\n<code>${err.message}</code>`;
+        }
+      }
 
       const state = recordEpisode(readState(), pending.episode, mediaId);
       writeState(state);
@@ -112,7 +128,7 @@ export async function applyDecision(action, pending, callbackId = null) {
       fs.rmSync(path.join(paths.posts, pending.filename), { force: true });
 
       await sendMessage(
-        `Posted. Episode ${pending.episodeNumber}: <b>${pending.episode.title}</b> is live on Instagram.`
+        `Posted. Episode ${pending.episodeNumber}: <b>${pending.episode.title}</b> is live on Instagram.${fbNote}`
       );
       return 'published';
     }
