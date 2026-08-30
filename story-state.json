@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 1,
+  "episodeCount": 2,
   "currentArc": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -12,6 +12,13 @@
       "summary": "Ichigo overfilled her cheek pouches on the kitchen counter while Teddy waited quietly with an acorn cap for the inevitable overflow.",
       "postedAt": "2026-08-30T04:51:41.500Z",
       "igMediaId": "17978868264115350"
+    },
+    {
+      "n": 2,
+      "title": "The Incline",
+      "summary": "Teddy over-engineered a ramp to the sofa that Ichigo bypassed immediately.",
+      "postedAt": "2026-08-30T18:24:43.165Z",
+      "igMediaId": "18073698725713886"
     }
   ],
   "lastProposedOn": "2026-08-30"

@@ -1,30 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 2,
-  "attempt": 2,
-  "episode": {
-    "title": "The Incline",
-    "scene": "Late afternoon in the attic living room, where warm honey-gold sunlight slants across wide wooden floorboards and pools at the base of the sagging patchwork sofa. Teddy, the large shaggy apricot Syrian hamster, crouches on his haunches on the floor, stubby front paws meticulously adjusting a graduated ramp made of stacked wooden dominoes and a vintage thread spool. His round, solid glossy black bead eyes are fixed in deep concentration on the alignment of the final block. Above him, already perched casually on the high sofa cushion, Ichigo, the tiny silvery dwarf hamster with her sleek grey stripe, sits grooming her left ear with a tiny white paw, looking down at his engineering project with bright, dark bead eyes.",
-    "caption": "He had spent twenty minutes calculating the optimal gradient.",
-    "hashtags": [
-      "hamsters",
-      "hamstercomic",
-      "webcomic",
-      "couplescomic",
-      "sliceoflife",
-      "illustration",
-      "relatable",
-      "cottagecore",
-      "storyart",
-      "comicstrip"
-    ],
-    "arcNote": "Teddy over-engineered a ramp to the sofa that Ichigo bypassed immediately.",
-    "arcUpdate": "",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0002-v2.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 27,
-  "lastUpdateId": 558643569,
-  "createdAt": "2026-08-30T18:24:12.232Z"
+  "status": "none"
 }

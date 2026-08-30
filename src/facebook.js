@@ -69,6 +69,16 @@ export async function checkPage() {
   // publish_actions. Catch the mix-up up front and name it.
   const who = await retryFetch(`${GRAPH}/me?fields=id,name&access_token=${encodeURIComponent(token)}`);
   const whoJson = await who.json().catch(() => ({}));
+
+  // A Page token inherits the lifetime of the user token it was derived from.
+  // Derived from a short-lived one it dies within hours, which looks identical
+  // to a permissions problem unless the expiry is called out.
+  if (/expired|Session has expired/i.test(whoJson.error?.message ?? '')) {
+    throw new Error(
+      'the Page token has expired. Run npm run fb-setup, which exchanges for a ' +
+        'long-lived user token first so the Page token it derives does not expire.'
+    );
+  }
   if (whoJson.id && whoJson.id !== pageId) {
     throw new Error(
       `this is a USER token for "${whoJson.name}", not a Page token. ` +
