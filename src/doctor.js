@@ -222,7 +222,9 @@ async function checkFacebook() {
   try {
     const page = await checkPage();
     if (page.unverified) {
-      ok('Facebook Page', 'token present; read is blocked but publishing should work');
+      // Verified the hard way: publishing needs pages_read_engagement too, so a
+      // blocked read means posting is blocked as well. Do not call this fine.
+      bad('Facebook Page', 'token present but the app lacks pages_read_engagement, which publishing also needs');
     } else {
       ok('Facebook Page', 'connected to ' + page.name);
     }

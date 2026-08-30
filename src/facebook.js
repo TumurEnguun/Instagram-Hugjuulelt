@@ -49,12 +49,14 @@ export async function publishPhoto(imageUrl, caption) {
  * Sanity check used by doctor.
  *
  * Reading a Page's own name needs `pages_read_engagement`, which this app is
- * not granted, while publishing only needs `pages_manage_posts`, which it is.
- * So a read failure of that specific kind says nothing about whether posting
- * works, and must not be reported as a broken setup.
+ * not granted.
  *
- * Returns { name } when the read succeeds, or { unverified: true } when the
- * only thing blocking it is the missing read permission.
+ * Returns { name } when the read succeeds, or { unverified: true } when the read
+ * is blocked by a missing permission.
+ *
+ * NOTE, learned by testing: publishing requires pages_read_engagement as well as
+ * pages_manage_posts. A blocked read therefore means posting is blocked too, so
+ * callers must treat unverified as broken rather than merely unconfirmed.
  */
 export async function checkPage() {
   if (!isConfigured()) return null;
