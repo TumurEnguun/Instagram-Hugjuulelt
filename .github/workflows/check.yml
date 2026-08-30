@@ -1,10 +1,10 @@
 name: Check for approval
 
-# Every 30 minutes across the Ulaanbaatar daytime window
-# (01:15-13:45 UTC = 09:15-21:45 local).
+# Every 30 minutes from the proposal until late, covering both the US
+# audience window and the Ulaanbaatar evening (13:15-23:45 UTC).
 on:
   schedule:
-    - cron: '15,45 1-13 * * *'
+    - cron: '15,45 13-23 * * *'
   workflow_dispatch:
 
 concurrency:

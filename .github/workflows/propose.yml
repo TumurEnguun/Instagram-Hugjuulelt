@@ -1,16 +1,17 @@
 name: Propose daily post
 
-# 01:00 UTC = 09:00 in Ulaanbaatar (UTC+8).
-# GitHub cron is always UTC and does not follow daylight saving.
+# Times are UTC. GitHub cron does not follow daylight saving, so the US
+# Eastern alignment drifts by an hour between summer and winter.
 on:
   schedule:
-    # GitHub drops most scheduled runs, so try several times across the
-    # Ulaanbaatar morning. A once-per-day guard in propose.js means only the
-    # first slot that actually fires produces a post.
-    - cron: '17 1 * * *'
-    - cron: '23 2 * * *'
-    - cron: '31 3 * * *'
-    - cron: '43 4 * * *'
+    # 13:07 UTC is 9am US Eastern, the strongest slot in Buffer's 9.6M-post
+    # study, and 9pm in Ulaanbaatar so Enguun is awake to approve it.
+    # GitHub drops most scheduled runs, so try four times; a once-per-day
+    # guard in propose.js means only the first that fires produces a post.
+    - cron: '7 13 * * *'
+    - cron: '11 14 * * *'
+    - cron: '19 15 * * *'
+    - cron: '23 16 * * *'
   workflow_dispatch:
 
 concurrency:

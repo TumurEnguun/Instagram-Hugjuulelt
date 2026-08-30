@@ -39,7 +39,7 @@ const EPISODE_SCHEMA = {
     hashtags: {
       type: 'array',
       items: { type: 'string' },
-      description: '8 to 12 relevant hashtags, without the # symbol.',
+      description: 'Exactly 5 hashtags, without the # symbol. See the hashtag rules in the prompt.',
     },
     arcNote: {
       type: 'string',
@@ -137,6 +137,19 @@ THE CAPTION:
   reader.
 - No "Swipe up", no "Tag someone who", no engagement bait, no hashtags in it.
 - At most one emoji, and usually zero.
+- Instagram reads caption text for search, so let the natural wording include
+  what the picture actually shows. Never keyword-stuff; the joke comes first.
+
+HASHTAGS, exactly 5:
+Instagram's head has said hashtags no longer boost reach, they categorise the
+post. So these are for telling the algorithm what this is, not for hunting
+audience. Five precise tags beat ten vague ones.
+  - 1 series tag: teddyandichigo
+  - 2 niche tags a real fan of this genre would follow, for example
+    hamstercomic, couplescomic, wholesomecomics, sliceoflifecomic
+  - 2 tags describing THIS episode specifically, drawn from what happens in it
+Never use enormous generic pools like cute, love, art, illustration, relatable,
+funny or instagood. The post will never surface there and the slot is wasted.
 ${avoidScene ? `\nThe following scene was just rejected. Write something clearly different:\n"${avoidScene}"` : ''}`;
 
   const res = await ai().models.generateContent({
