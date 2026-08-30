@@ -35,9 +35,12 @@ async function main() {
   console.log('  2. Pick your app (Hamster-bot) in the top right');
   console.log('  3. Click "Add a Permission" and tick:');
   console.log('       pages_show_list');
-  console.log('       pages_read_engagement');
   console.log('       pages_manage_posts');
   console.log('       pages_manage_engagement');
+  console.log('');
+  console.log('     Tick ONLY those three. pages_read_engagement and');
+  console.log('     pages_read_user_content are not available to this kind of app');
+  console.log('     and cause an Invalid Scopes error.');
   console.log('  4. Click "Generate Access Token" and approve');
   console.log('  5. Copy the token it shows\n');
 
