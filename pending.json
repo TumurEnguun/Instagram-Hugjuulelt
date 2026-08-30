@@ -1,3 +1,29 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 2,
+  "attempt": 1,
+  "episode": {
+    "title": "Structural Integrity",
+    "scene": "Evening in the attic bedroom, illuminated by the warm honey glow of a brass bedside lamp that pools light across a patchwork rug. Teddy, the large shaggy apricot Syrian hamster, sits back on his haunches with his tiny paws frozen mid-air, looking down at his handiwork with wide, solid glossy black bead eyes. Around him lie meticulously arranged concentric rings of shredded cream linen, dried sage sprigs, and combed wool. In the absolute centre of this precise architecture, a deep collapsed trench leads straight to Ichigo, the tiny silvery dwarf hamster, who has already curled herself into a tight, contented ball in the warmest hollow, her glossy black bead eyes half-lidded and serene amidst the wreckage.",
+    "caption": "Teddy spent forty-five minutes calculating the optimal insulation density of the evening nest. Ichigo required three seconds.",
+    "hashtags": [
+      "hamsterlife",
+      "webcomic",
+      "couplegoals",
+      "hamstersofinstagram",
+      "cozyart",
+      "illustration",
+      "storybookart",
+      "relatablecouples",
+      "dailystrip"
+    ],
+    "arcNote": "Teddy meticulously over-engineered their bedtime nest only for Ichigo to bulldoze directly into the middle of it.",
+    "arcUpdate": "",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0002-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 26,
+  "lastUpdateId": 0,
+  "createdAt": "2026-08-30T17:33:40.395Z"
 }
