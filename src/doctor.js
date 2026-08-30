@@ -245,6 +245,15 @@ async function main() {
   const failed = results.filter((r) => r.state === 'bad').length;
   const pending = results.filter((r) => r.state === 'skip').length;
 
+  // --strict makes the process exit non-zero when anything failed, so a CI run
+  // goes red instead of quietly passing. Used by the verify workflow.
+  if (process.argv.includes('--strict') && failed > 0) {
+    console.log('');
+    console.log(failed + ' check(s) failed.');
+    process.exitCode = 1;
+    return;
+  }
+
   console.log('');
   if (failed === 0 && pending === 0) {
     console.log('Everything works. Next: npm run bootstrap\n');
