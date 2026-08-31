@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 3,
+  "attempt": 1,
+  "episode": {
+    "title": "Just Resting His Eyes",
+    "scene": "Living room, late evening. A warm brass floor lamp casts a honey-gold pool of light across the sagging patchwork sofa. Teddy, an enormous shaggy apricot Syrian hamster, has completely deflated into a heavy, sprawling loaf on the cushion, cheek squished flat against a dusty sage knit blanket in deep slumber, with one tiny stubby paw still resting loosely over an uncracked sunflower seed. Beside his massive sleeping form, tiny silvery-white Ichigo sits bolt upright, neat dorsal stripe crisp along her spine, rounded ears perked high, staring down at him with a deadpan tilt of her pointed muzzle and bristling whiskers.",
+    "caption": "He specifically asked for the long version.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "fallingasleep",
+      "sleepypartner"
+    ],
+    "arcNote": "Teddy fell asleep immediately after asking Ichigo to tell him a full story.",
+    "arcUpdate": "",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0003-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 30,
+  "lastUpdateId": 0,
+  "createdAt": "2026-08-31T19:30:33.541Z"
 }
