@@ -1,25 +1,25 @@
 {
   "status": "awaiting",
   "episodeNumber": 3,
-  "attempt": 1,
+  "attempt": 2,
   "episode": {
     "title": "Just Resting His Eyes",
-    "scene": "Living room, late evening. A warm brass floor lamp casts a honey-gold pool of light across the sagging patchwork sofa. Teddy, an enormous shaggy apricot Syrian hamster, has completely deflated into a heavy, sprawling loaf on the cushion, cheek squished flat against a dusty sage knit blanket in deep slumber, with one tiny stubby paw still resting loosely over an uncracked sunflower seed. Beside his massive sleeping form, tiny silvery-white Ichigo sits bolt upright, neat dorsal stripe crisp along her spine, rounded ears perked high, staring down at him with a deadpan tilt of her pointed muzzle and bristling whiskers.",
-    "caption": "He specifically asked for the long version.",
+    "scene": "The bedroom corner beside the round attic window, late night. A low candle stub casts a warm honey-amber glow across a pile of folded linen quilts while deep twilight blues frame the rooftops outside. Teddy, a massive shaggy apricot Syrian hamster, has slumped forward into a heavy, boneless sleep, his cheek squashed flat against the quilt and his tiny stubby paws still loosely clasping a half-peeled pumpkin seed. Tiny silvery-white Ichigo sits squarely upright beside his huge snoozing form, solid glossy black bead eyes fixed on him in dry, unimpressed silence.",
+    "caption": "He insisted this was his favourite part and that he was only closing his eyes to listen better.",
     "hashtags": [
       "teddyandichigo",
       "couplescomic",
       "sliceoflifecomic",
-      "fallingasleep",
+      "justrestingmyeyes",
       "sleepypartner"
     ],
-    "arcNote": "Teddy fell asleep immediately after asking Ichigo to tell him a full story.",
+    "arcNote": "Teddy insisted on staying up late for a midnight snack by the window, then promptly fell asleep mid-bite.",
     "arcUpdate": "",
     "newRunningGag": ""
   },
-  "filename": "ep-0003-v1.jpg",
+  "filename": "ep-0003-v2.jpg",
   "aspectRatio": "4:5",
-  "telegramMessageId": 30,
-  "lastUpdateId": 0,
-  "createdAt": "2026-08-31T19:30:33.541Z"
+  "telegramMessageId": 31,
+  "lastUpdateId": 558643571,
+  "createdAt": "2026-08-31T19:38:00.059Z"
 }
