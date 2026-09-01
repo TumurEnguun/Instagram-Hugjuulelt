@@ -7,9 +7,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { paths } from './config.js';
-import { propose, today } from './decide.js';
+import { propose } from './decide.js';
 import { writeEpisode, drawPanel } from './gemini.js';
-import { readState, readBible, readCharacterRefs, readPending } from './store.js';
+import { readState, readBible, readCharacterRefs, readPending, runOncePerDay, SKIPPED } from './store.js';
 import { sendMessage } from './telegram.js';
 
 const dryRun = process.argv.includes('--dry-run');
@@ -38,36 +38,41 @@ async function dry() {
 async function main() {
   if (dryRun) return dry();
 
+  // Every message below goes through runOncePerDay for the same reason the
+  // proposal itself does: propose runs from four cron slots, and without a
+  // per-day claim each slot sends its own copy. That is not theoretical, it
+  // shipped: two identical "still waiting on you" reminders arrived 30 minutes
+  // apart because the early-return branches sat above the guard.
+
   // Not set up yet is a normal state, not a failure. Say so plainly and exit
   // green, rather than waking someone to a red workflow and a stack trace.
   if (!fs.existsSync(paths.bible) || readCharacterRefs().length === 0) {
     console.log('No characters yet. Nothing to post.');
-    await sendMessage(
-      'Morning. No post today: the characters have not been created yet.\n\n' +
-        'Run <code>npm run bootstrap</code> when you are ready, and I will start posting the day after.'
+    await runOncePerDay('lastSetupNagOn', () =>
+      sendMessage(
+        'Morning. No post today: the characters have not been created yet.\n\n' +
+          'Run <code>npm run bootstrap</code> when you are ready, and I will start posting the day after.'
+      )
     );
-    return;
-  }
-
-  // propose runs from several cron slots because GitHub drops most scheduled
-  // runs. Whichever one actually fires does the work; the rest stop here.
-  const state = readState();
-  if (state.lastProposedOn === today()) {
-    console.log(`Already proposed today (${state.lastProposedOn}). Nothing to do.`);
     return;
   }
 
   const pending = readPending();
   if (pending.status === 'awaiting') {
     console.log(`Episode ${pending.episodeNumber} is still awaiting a decision. Not generating another.`);
-    await sendMessage(
-      `Reminder: episode ${pending.episodeNumber} is still waiting on you. ` +
-        `Tap a button on the post above, or it will not go out.`
+    await runOncePerDay('lastReminderOn', () =>
+      sendMessage(
+        `Reminder: episode ${pending.episodeNumber} is still waiting on you. ` +
+          `Tap a button on the post above, or it will not go out.`
+      )
     );
     return;
   }
 
-  await propose({ mode: 'new' });
+  // The claim is written only after the proposal is actually sent, so a slot
+  // that dies mid-generation leaves the next slot free to try again.
+  const result = await runOncePerDay('lastProposedOn', () => propose({ mode: 'new' }));
+  if (result === SKIPPED) console.log('Already proposed today. Nothing to do.');
 }
 
 main().catch(async (err) => {

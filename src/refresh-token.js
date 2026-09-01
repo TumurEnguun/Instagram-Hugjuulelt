@@ -14,9 +14,7 @@
  *   locally              refresh and write the new token into .env, then tell
  *                        Enguun to update the GitHub secret and run verify
  */
-import fs from 'node:fs';
-import path from 'node:path';
-import { ROOT, need, optional } from './config.js';
+import { need, optional, setEnv } from './config.js';
 import { retryFetch } from './net.js';
 import { sendMessage } from './telegram.js';
 
@@ -69,15 +67,12 @@ async function updateSecret(token) {
   }
 }
 
-/** Replace the token line in .env, so a local refresh is self-contained. */
-function updateEnvFile(token) {
-  const envPath = path.join(ROOT, '.env');
-  if (!fs.existsSync(envPath)) throw new Error('.env not found; cannot store the token locally.');
-  let env = fs.readFileSync(envPath, 'utf8');
-  if (!/^IG_ACCESS_TOKEN=.*$/m.test(env)) throw new Error('.env has no IG_ACCESS_TOKEN line.');
-  env = env.replace(/^IG_ACCESS_TOKEN=.*$/m, 'IG_ACCESS_TOKEN=' + token);
-  fs.writeFileSync(envPath, env);
-}
+// Storing the token locally uses the shared setEnv from config.js. This used to
+// be a private copy that demanded an exact `^IG_ACCESS_TOKEN=` line and threw
+// when it did not find one, AFTER Instagram had already minted a replacement.
+// The new token then existed only in a local variable and was lost, while the
+// alert claimed the refresh had failed. Instagram will not issue another for 24
+// hours, so that cost a day. setEnv upserts and never throws.
 
 async function main() {
   // In CI without a PAT there is nowhere safe to put a new token, so do not
@@ -104,7 +99,7 @@ async function main() {
     return;
   }
 
-  updateEnvFile(access_token);
+  setEnv('IG_ACCESS_TOKEN', access_token);
   console.log('Token refreshed and written into .env. Valid ~' + days + ' days.');
   console.log('');
   console.log('Now: copy IG_ACCESS_TOKEN from .env into the GitHub secret of the same');

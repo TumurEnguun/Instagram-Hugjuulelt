@@ -69,6 +69,35 @@ export function readCharacterRefs() {
  * Only called after Instagram confirms the post, so the log never drifts
  * ahead of what is actually on the feed.
  */
+/** UTC date stamp, e.g. 2026-09-01. Every retry slot falls on one UTC day. */
+export const today = () => new Date().toISOString().slice(0, 10);
+
+/**
+ * Run something at most once per UTC day, across every retry slot.
+ *
+ * GitHub drops most scheduled runs, so each job is scheduled several times and
+ * needs a claim. Getting the ORDER right matters and had been decided
+ * differently in each place that hand-rolled it: the marker must only be
+ * written after the work actually succeeded. insights.js previously marked the
+ * weekly report as sent before sending it, so one failed Telegram call
+ * disabled that week's remaining slots and the report was simply lost.
+ *
+ * Returns what `fn` returned, or SKIPPED when the day is already claimed.
+ */
+export const SKIPPED = Symbol('already ran today');
+
+export async function runOncePerDay(key, fn, { force = false } = {}) {
+  const day = today();
+  if (!force && readState()[key] === day) return SKIPPED;
+
+  const result = await fn();
+
+  // Re-read rather than reusing the earlier snapshot: fn may well have written
+  // state of its own, and clobbering it here would undo the work just done.
+  writeState({ ...readState(), [key]: day });
+  return result;
+}
+
 export function recordEpisode(state, episode, permalinkId) {
   state.episodeCount += 1;
   state.episodes.push({

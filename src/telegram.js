@@ -29,7 +29,7 @@ export async function sendMessage(text) {
 }
 
 /** Send the proposed post: image bytes uploaded directly, plus the four buttons. */
-export async function sendProposal(jpegBuffer, episode, episodeNumber) {
+export async function sendProposal(jpegBuffer, episode, episodeNumber, attempt) {
   const caption = [
     `<b>Episode ${episodeNumber}: ${escapeHtml(episode.title)}</b>`,
     '',
@@ -43,17 +43,24 @@ export async function sendProposal(jpegBuffer, episode, episodeNumber) {
   form.append('caption', caption.slice(0, 1024));
   form.append('parse_mode', 'HTML');
   form.append('photo', new Blob([jpegBuffer], { type: 'image/jpeg' }), 'post.jpg');
+  // Each button carries which episode and attempt it belongs to. Old proposal
+  // messages keep working keyboards forever, so a bare "OK" is ambiguous: a tap
+  // on a superseded redraw would approve whatever happens to be pending now,
+  // publishing an image that was explicitly rejected. Telegram allows 64 bytes
+  // of callback_data, and "REWRITE:9999:99" is well inside that.
+  const tag = (action) => `${action}:${episodeNumber}:${attempt}`;
+
   form.append(
     'reply_markup',
     JSON.stringify({
       inline_keyboard: [
         [
-          { text: 'OK, post it', callback_data: 'OK' },
-          { text: 'Redraw', callback_data: 'AGAIN' },
+          { text: 'OK, post it', callback_data: tag('OK') },
+          { text: 'Redraw', callback_data: tag('AGAIN') },
         ],
         [
-          { text: 'New story', callback_data: 'REWRITE' },
-          { text: 'Skip today', callback_data: 'SKIP' },
+          { text: 'New story', callback_data: tag('REWRITE') },
+          { text: 'Skip today', callback_data: tag('SKIP') },
         ],
       ],
     })
@@ -87,13 +94,32 @@ export async function pollDecision(offset = 0) {
   if (presses.length === 0) return null;
 
   const latest = presses[presses.length - 1];
+  const [action, episodeNumber, attempt] = String(latest.callback_query.data).split(':');
+
   return {
-    action: latest.callback_query.data,
+    action,
+    // Undefined for presses on messages sent before buttons were tagged.
+    // Callers treat that as "cannot verify" rather than as a mismatch.
+    episodeNumber: episodeNumber === undefined ? undefined : Number(episodeNumber),
+    attempt: attempt === undefined ? undefined : Number(attempt),
     updateId: latest.update_id,
     callbackId: latest.callback_query.id,
     // Highest id seen, so we acknowledge everything we just read.
     maxUpdateId: json.result[json.result.length - 1].update_id,
   };
+}
+
+/**
+ * Does this press belong to the proposal currently awaiting a decision?
+ *
+ * Guards against a tap on a superseded message. Presses from before buttons
+ * carried identity have no episode number; those are allowed through, since
+ * rejecting them would strand any proposal still on screen from an older
+ * version of the bot.
+ */
+export function pressMatchesPending(decision, pending) {
+  if (decision.episodeNumber === undefined) return true;
+  return decision.episodeNumber === pending.episodeNumber && decision.attempt === pending.attempt;
 }
 
 /**
@@ -164,6 +190,6 @@ export async function waitForDecision(offset, minutes) {
   return null;
 }
 
-function escapeHtml(s) {
+export function escapeHtml(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

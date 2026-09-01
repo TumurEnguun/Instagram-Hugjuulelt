@@ -9,7 +9,7 @@ import path from 'node:path';
 import { paths } from './config.js';
 import { writeEpisode, drawPanel } from './gemini.js';
 import { readState, writeState, readBible, readCharacterRefs, writePending, clearPending, recordEpisode } from './store.js';
-import { sendProposal, sendMessage, ackButton, drainUpdates } from './telegram.js';
+import { sendProposal, sendMessage, ackButton, drainUpdates, escapeHtml } from './telegram.js';
 import { publishPhoto } from './instagram.js';
 import * as facebook from './facebook.js';
 import { publicUrlFor, waitUntilReachable } from './host.js';
@@ -52,7 +52,7 @@ export async function propose({ mode = 'new', previous = null } = {}) {
   // proposal starts clean, so flush anything stale first.
   const baseline = previous?.lastUpdateId ?? (await drainUpdates());
 
-  const sent = await sendProposal(jpeg, episode, episodeNumber);
+  const sent = await sendProposal(jpeg, episode, episodeNumber, attempt);
 
   writePending({
     status: 'awaiting',
@@ -66,17 +66,10 @@ export async function propose({ mode = 'new', previous = null } = {}) {
     createdAt: new Date().toISOString(),
   });
 
-  // Record that today's proposal exists. GitHub drops most scheduled runs, so
-  // propose is scheduled several times each morning; this is what stops the
-  // later attempts producing a second post for the same day.
-  writeState({ ...readState(), lastProposedOn: today() });
-
   console.log(`Proposal sent to Telegram: ${filename} (${aspectRatio})`);
   return { episodeNumber, filename };
 }
 
-/** UTC date stamp, e.g. 2026-08-30. All the retry slots fall on one UTC day. */
-export const today = () => new Date().toISOString().slice(0, 10);
 
 /** Build the final Instagram caption from the episode. */
 function buildCaption(episode) {
@@ -124,7 +117,7 @@ export async function applyDecision(action, pending, callbackId = null) {
           fbNote = '\nAlso posted to your Facebook Page.';
         } catch (err) {
           console.warn(`Facebook cross-post failed: ${err.message}`);
-          fbNote = `\nInstagram worked, but the Facebook cross-post failed:\n<code>${err.message}</code>`;
+          fbNote = `\nInstagram worked, but the Facebook cross-post failed:\n<code>${escapeHtml(err.message)}</code>`;
         }
       }
 
@@ -136,7 +129,7 @@ export async function applyDecision(action, pending, callbackId = null) {
       fs.rmSync(path.join(paths.posts, pending.filename), { force: true });
 
       await sendMessage(
-        `Posted. Episode ${pending.episodeNumber}: <b>${pending.episode.title}</b> is live on Instagram.${fbNote}`
+        `Posted. Episode ${pending.episodeNumber}: <b>${escapeHtml(pending.episode.title)}</b> is live on Instagram.${fbNote}`
       );
       return 'published';
     }

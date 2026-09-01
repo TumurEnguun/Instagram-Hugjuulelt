@@ -38,12 +38,20 @@ jobs:
       - name: Act on the latest Telegram answer
         run: node src/check.js
 
-      - name: Commit any change
+      # check.js may have already published to Instagram by this point, so
+      # losing this push means the remote still says "awaiting" for a live
+      # episode: tomorrow's run sends a reminder instead of a post, and
+      # tapping OK again publishes a duplicate. _persist.sh retries.
+      - name: Persist the outcome
         if: always()
+        run: .github/workflows/_persist.sh "Handle approval decision"
+
+      - name: Alert if state could not be saved
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          git config user.name "hamster-bot"
-          git config user.email "hamster-bot@users.noreply.github.com"
-          git add -A posts pending.json story-state.json
-          git diff --staged --quiet || git commit -m "Handle approval decision"
-          git pull --rebase --autostash origin "${GITHUB_BRANCH}"
-          git push origin HEAD:"${GITHUB_BRANCH}"
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            -d chat_id="${TELEGRAM_CHAT_ID}" \
+            -d text="A check run failed and state may not have been saved. If a post went live, the repo may still say it is awaiting approval. ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" > /dev/null

@@ -48,9 +48,22 @@ function skip(name, detail) {
   console.log(`  [ -- ]   ${name}  ${detail}`);
 }
 
+/**
+ * A required credential that is simply absent. Distinct from skip(), which is
+ * for genuinely optional things like Facebook.
+ *
+ * --strict used to count only 'bad', so deleting or mistyping a secret name in
+ * GitHub made every check return skip() and the Verify workflow reported GREEN
+ * for a bot that could not post at all.
+ */
+function missing(name, detail) {
+  results.push({ name, state: 'missing', detail });
+  console.log(`  [MISS]   ${name}  ${detail}`);
+}
+
 async function checkGemini() {
   const key = process.env.GEMINI_API_KEY;
-  if (!key) return skip('GEMINI_API_KEY', 'not set yet');
+  if (!key) return missing('GEMINI_API_KEY', 'not set');
 
   try {
     const { GoogleGenAI } = await import('@google/genai');
@@ -108,8 +121,8 @@ async function checkGeminiBilling() {
 async function checkTelegram() {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) {
-    skip('TELEGRAM_BOT_TOKEN', 'not set yet');
-    return skip('TELEGRAM_CHAT_ID', 'needs the bot token first');
+    missing('TELEGRAM_BOT_TOKEN', 'not set');
+    return missing('TELEGRAM_CHAT_ID', 'needs the bot token first');
   }
 
   let botName;
@@ -183,7 +196,7 @@ async function checkInstagram() {
   const id = process.env.IG_USER_ID;
   const token = process.env.IG_ACCESS_TOKEN;
 
-  if (!token) return skip('IG_USER_ID / IG_ACCESS_TOKEN', 'not set yet');
+  if (!token) return missing('IG_USER_ID / IG_ACCESS_TOKEN', 'not set');
 
   // The token knows which account it belongs to, so there is no need to go
   // hunting for the user ID in Meta's dashboard.
@@ -243,19 +256,20 @@ async function main() {
   await checkFacebook();
 
   const failed = results.filter((r) => r.state === 'bad').length;
+  const absent = results.filter((r) => r.state === 'missing').length;
   const pending = results.filter((r) => r.state === 'skip').length;
 
   // --strict makes the process exit non-zero when anything failed, so a CI run
   // goes red instead of quietly passing. Used by the verify workflow.
-  if (process.argv.includes('--strict') && failed > 0) {
+  if (process.argv.includes('--strict') && (failed > 0 || absent > 0)) {
     console.log('');
-    console.log(failed + ' check(s) failed.');
+    console.log(failed + ' failing, ' + absent + ' required credential(s) missing.');
     process.exitCode = 1;
     return;
   }
 
   console.log('');
-  if (failed === 0 && pending === 0) {
+  if (failed === 0 && absent === 0 && pending === 0) {
     console.log('Everything works. Next: npm run bootstrap\n');
   } else {
     console.log(`${failed} failing, ${pending} not filled in yet. See SETUP.md for each one.\n`);

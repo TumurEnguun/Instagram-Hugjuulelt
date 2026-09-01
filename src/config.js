@@ -56,3 +56,26 @@ export function need(name) {
 export function optional(name, fallback = '') {
   return process.env[name] || fallback;
 }
+
+/**
+ * Write a key into .env, replacing the existing line or appending a new one.
+ *
+ * Upsert, never throw. refresh-token.js used to demand an exact
+ * `^IG_ACCESS_TOKEN=` line and threw when it did not find one, AFTER Instagram
+ * had already minted a replacement token. The new token existed only in a local
+ * variable and was lost, while the alert claimed the refresh had failed. Since
+ * Instagram will not issue another for 24 hours, that mistake cost a day.
+ *
+ * The pattern is deliberately looser than an exact match, mirroring the loader
+ * above, which tolerates whitespace around the name and the equals sign.
+ */
+export function setEnv(name, value) {
+  const file = path.join(ROOT, '.env');
+  let env = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+  const line = `${name}=${value}`;
+  const existing = new RegExp(`^\\s*${name}\\s*=.*$`, 'm');
+
+  env = existing.test(env) ? env.replace(existing, line) : env.trimEnd() + '\n' + line + '\n';
+  fs.writeFileSync(file, env);
+  process.env[name] = value;
+}

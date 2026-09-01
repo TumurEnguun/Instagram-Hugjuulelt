@@ -100,11 +100,18 @@ export async function writeEpisode(state, bible, { avoidScene = '' } = {}) {
   // Weighted towards Teddy on purpose. Ichigo acting first is written into her
   // character, so an even split still produced four Ichigo-driven episodes out
   // of six. Asking for Teddy more often is what actually lands near 50/50.
+  //
+  // The length must be COPRIME with BEATS.length (18) or the two rotations stay
+  // parity-locked. With 4 drivers, gcd(18,4)=2 meant every even-indexed beat
+  // could only ever draw drivers 0 or 2, so nine of the situations never once
+  // got the shared-moment driver. 5 is coprime with 18, so all 90 pairings
+  // eventually occur.
   const drivers = [
     'ICHIGO is the one doing it. Teddy reacts.',
     'TEDDY is the one doing it. Ichigo reacts.',
-    'TEDDY is the one doing it. Ichigo reacts.',
     'BOTH are equally guilty, or it is nobody fault. Play it as a shared moment.',
+    'TEDDY is the one doing it. Ichigo reacts.',
+    'ICHIGO is the one doing it. Teddy reacts.',
   ];
   const driver = drivers[state.episodeCount % drivers.length];
   const recent =

@@ -17,14 +17,12 @@
  * FB_USER_TOKEN) and prompted for otherwise. The resulting Page token is
  * written straight into .env, so there is no line to copy wrongly.
  */
-import fs from 'node:fs';
 import readline from 'node:readline/promises';
 import { stdin, stdout } from 'node:process';
-import { ROOT } from './config.js';
+import { setEnv } from './config.js';
 import { retryFetch } from './net.js';
 
 const GRAPH = 'https://graph.facebook.com/v25.0';
-const ENV = ROOT + '/.env';
 
 async function graph(pathname, params) {
   const url = new URL(GRAPH + pathname);
@@ -33,15 +31,6 @@ async function graph(pathname, params) {
   const json = await res.json().catch(() => ({}));
   if (json.error) throw new Error(json.error.message);
   return json;
-}
-
-/** Set a key in .env, replacing any existing line for it. */
-function setEnv(key, value) {
-  let env = fs.existsSync(ENV) ? fs.readFileSync(ENV, 'utf8') : '';
-  const line = `${key}=${value}`;
-  const re = new RegExp(`^${key}=.*$`, 'm');
-  env = re.test(env) ? env.replace(re, line) : env.trimEnd() + '\n' + line + '\n';
-  fs.writeFileSync(ENV, env);
 }
 
 async function main() {
