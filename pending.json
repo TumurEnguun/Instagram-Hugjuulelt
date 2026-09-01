@@ -1,7 +1,7 @@
 {
   "status": "awaiting",
   "episodeNumber": 3,
-  "attempt": 2,
+  "attempt": 3,
   "episode": {
     "title": "Just Resting His Eyes",
     "scene": "The bedroom corner beside the round attic window, late night. A low candle stub casts a warm honey-amber glow across a pile of folded linen quilts while deep twilight blues frame the rooftops outside. Teddy, a massive shaggy apricot Syrian hamster, has slumped forward into a heavy, boneless sleep, his cheek squashed flat against the quilt and his tiny stubby paws still loosely clasping a half-peeled pumpkin seed. Tiny silvery-white Ichigo sits squarely upright beside his huge snoozing form, solid glossy black bead eyes fixed on him in dry, unimpressed silence.",
@@ -17,9 +17,9 @@
     "arcUpdate": "",
     "newRunningGag": ""
   },
-  "filename": "ep-0003-v2.jpg",
+  "filename": "ep-0003-v3.jpg",
   "aspectRatio": "4:5",
-  "telegramMessageId": 31,
-  "lastUpdateId": 558643571,
-  "createdAt": "2026-08-31T19:38:00.059Z"
+  "telegramMessageId": 35,
+  "lastUpdateId": 558643573,
+  "createdAt": "2026-09-01T17:51:50.623Z"
 }
