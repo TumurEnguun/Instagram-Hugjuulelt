@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 3,
+  "episodeCount": 4,
   "currentArc": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -26,6 +26,13 @@
       "summary": "Teddy insisted on staying up late for a midnight snack by the window, then promptly fell asleep mid-bite.",
       "postedAt": "2026-09-02T04:02:02.943Z",
       "igMediaId": "18113226587086525"
+    },
+    {
+      "n": 4,
+      "title": "Thermal Efficiency",
+      "summary": "Teddy treated Ichigo as a personal hot water bottle during an evening chill.",
+      "postedAt": "2026-09-02T19:27:08.180Z",
+      "igMediaId": "17930004129392794"
     }
   ],
   "lastProposedOn": "2026-09-02",

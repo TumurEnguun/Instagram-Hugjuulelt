@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 4,
-  "attempt": 1,
-  "episode": {
-    "title": "Thermal Efficiency",
-    "scene": "In the bedroom nest of folded blankets during a chilly evening, lit by the warm honey glow of a nearby oil lamp. Teddy, an enormous shaggy apricot Syrian hamster, is sprawled across almost the entire bed, happily wedging his cold blunt nose and tiny pink front paws directly underneath Ichigo's warm silvery flank. Ichigo, a neat little white dwarf hamster half his size, is squashed flat against the soft roll of a sage green quilt, pinned by his immense fluffy bulk, staring forward with alert, wide, solid black bead eyes in pure unimpressed endurance.",
-    "caption": "He has twice her fur volume and ninety percent of the blanket, but insisted her ribs were the only active heat source in the flat.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "coldfeet",
-      "blanketnest"
-    ],
-    "arcNote": "Teddy treated Ichigo as a personal hot water bottle during an evening chill.",
-    "arcUpdate": "",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0004-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 39,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-02T19:21:41.430Z"
+  "status": "none"
 }
