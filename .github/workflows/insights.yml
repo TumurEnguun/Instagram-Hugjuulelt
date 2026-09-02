@@ -1,13 +1,14 @@
 name: Weekly insights
 
-# Sunday evening in Ulaanbaatar (12:00 UTC = 20:00 local).
-# Several slots because GitHub drops most scheduled runs; a once-per-day
-# guard in insights.js means only the first that fires sends the report.
+# Sunday evening in Monterey. 02:03 UTC Monday is 7:03pm Sunday Pacific.
+# Several slots because GitHub drops most scheduled runs; runOncePerDay in
+# insights.js marks the day only after the send succeeds, so a failed send
+# leaves the later slots free to retry.
 on:
   schedule:
-    - cron: '3 12 * * 0'
-    - cron: '9 13 * * 0'
-    - cron: '17 14 * * 0'
+    - cron: '3 2 * * 1'
+    - cron: '9 3 * * 1'
+    - cron: '17 4 * * 1'
   workflow_dispatch:
 
 concurrency:

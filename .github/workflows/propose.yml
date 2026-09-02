@@ -4,14 +4,16 @@ name: Propose daily post
 # Eastern alignment drifts by an hour between summer and winter.
 on:
   schedule:
-    # 13:07 UTC is 9am US Eastern, the strongest slot in Buffer's 9.6M-post
-    # study, and 9pm in Ulaanbaatar so Enguun is awake to approve it.
+    # 16:07 UTC lands 9am in Monterey (Enguun is awake to approve), noon in
+    # New York and 5pm in London, so it is a strong slot for a US and UK
+    # audience AND a time he can actually act on. The earlier 13:07 slot was
+    # 6:07am Pacific, so proposals sat unapproved through their own peak.
     # GitHub drops most scheduled runs, so try four times; a once-per-day
     # guard in propose.js means only the first that fires produces a post.
-    - cron: '7 13 * * *'
-    - cron: '11 14 * * *'
-    - cron: '19 15 * * *'
-    - cron: '23 16 * * *'
+    - cron: '7 16 * * *'
+    - cron: '11 17 * * *'
+    - cron: '19 18 * * *'
+    - cron: '23 19 * * *'
   workflow_dispatch:
 
 concurrency:
