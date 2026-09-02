@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 2,
+  "episodeCount": 3,
   "currentArc": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -19,6 +19,13 @@
       "summary": "Teddy over-engineered a ramp to the sofa that Ichigo bypassed immediately.",
       "postedAt": "2026-08-30T18:24:43.165Z",
       "igMediaId": "18073698725713886"
+    },
+    {
+      "n": 3,
+      "title": "Just Resting His Eyes",
+      "summary": "Teddy insisted on staying up late for a midnight snack by the window, then promptly fell asleep mid-bite.",
+      "postedAt": "2026-09-02T04:02:02.943Z",
+      "igMediaId": "18113226587086525"
     }
   ],
   "lastProposedOn": "2026-09-01",
