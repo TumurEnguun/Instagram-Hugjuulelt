@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 6,
+  "attempt": 1,
+  "episode": {
+    "title": "Just a Taste",
+    "scene": "In the warm late-afternoon sunlight on the kitchen floor, Teddy sits back on his haunches with his paws resting quietly in his lap, his solid black bead eyes fixed in mild resignation on his vintage floral saucer. Ichigo, completely bypassing her own untouched acorn cap of seeds nearby, has climbed halfway into Teddy's dish, front paws firmly planted on a toasted pumpkin seed as she cheerfully nibbles the corner.",
+    "caption": "She didn't want any because she wasn't hungry. His, however, tasted different.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "justabite",
+      "sharingfood"
+    ],
+    "arcNote": "Ichigo claimed she wasn't hungry before eating directly from Teddy's saucer.",
+    "arcUpdate": "Teddy accepts that any meal within arm's reach is communal property.",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0006-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 45,
+  "lastUpdateId": 0,
+  "createdAt": "2026-09-04T21:36:05.388Z"
 }
