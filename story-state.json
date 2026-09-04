@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 4,
+  "episodeCount": 5,
   "currentArc": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -33,6 +33,13 @@
       "summary": "Teddy treated Ichigo as a personal hot water bottle during an evening chill.",
       "postedAt": "2026-09-02T19:27:08.180Z",
       "igMediaId": "17930004129392794"
+    },
+    {
+      "n": 5,
+      "title": "Almost Ready",
+      "summary": "Ichigo waited with rigid punctuality by the door while Teddy took his sweet time grooming.",
+      "postedAt": "2026-09-04T20:46:23.786Z",
+      "igMediaId": "18086487728692267"
     }
   ],
   "lastProposedOn": "2026-09-03",

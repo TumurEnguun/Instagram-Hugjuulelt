@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 5,
-  "attempt": 1,
-  "episode": {
-    "title": "Almost Ready",
-    "scene": "In the sunlit hallway of the attic flat during mid-morning, Ichigo sits perfectly upright and poised right at the front door threshold, her smooth silvery-white fur meticulously neat and her dark dorsal stripe ruler-straight. Her solid black bead eyes are fixed in an unblinking, expectant stare across the room. A few feet behind her on a small braided rug, Teddy sits in an enormous, round puddle of shaggy apricot fur, completely absorbed in slowly and thoroughly washing his left ear with one tiny stubby paw, blissfully oblivious to her impatience.",
-    "caption": "She announced she was leaving without him five minutes ago. Teddy is currently on step one of his morning face wash.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "runninglate",
-      "almostready"
-    ],
-    "arcNote": "Ichigo waited with rigid punctuality by the door while Teddy took his sweet time grooming.",
-    "arcUpdate": "",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0005-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 41,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-03T19:15:09.248Z"
+  "status": "none"
 }
