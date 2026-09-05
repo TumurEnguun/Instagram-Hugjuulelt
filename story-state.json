@@ -1,7 +1,7 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 5,
-  "currentArc": "Living comfortably together in the attic flat, with Teddy already well-accustomed to Ichigo's stubborn kitchen ambitions.",
+  "episodeCount": 6,
+  "currentArc": "Teddy accepts that any meal within arm's reach is communal property.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
   ],
@@ -40,6 +40,13 @@
       "summary": "Ichigo waited with rigid punctuality by the door while Teddy took his sweet time grooming.",
       "postedAt": "2026-09-04T20:46:23.786Z",
       "igMediaId": "18086487728692267"
+    },
+    {
+      "n": 6,
+      "title": "Just a Taste",
+      "summary": "Ichigo claimed she wasn't hungry before eating directly from Teddy's saucer.",
+      "postedAt": "2026-09-05T20:31:04.521Z",
+      "igMediaId": "18020993300862589"
     }
   ],
   "lastProposedOn": "2026-09-04",
