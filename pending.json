@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 7,
-  "attempt": 1,
-  "episode": {
-    "title": "A Matter of Posture",
-    "scene": "In the attic living room in warm late-afternoon sunlight, Teddy has wedged his large, round body into a comically tiny ceramic tea saucer on the rug. His shaggy apricot fur overflows over every rim like rising bread dough, paws tucked tight against his chest, glossy black bead eyes staring straight ahead with absolute, dignified stillness. Ichigo sits a few inches away on a vast, plush patchwork cushion with plenty of empty room, watching him in silent, patient amusement.",
-    "caption": "He chose this spot on purpose and he has never been more comfortable.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "stubbornpartner",
-      "ifitfitsisits"
-    ],
-    "arcNote": "Teddy stubbornly crammed himself into an undersized saucer rather than admit he needed the big cushion Ichigo offered.",
-    "arcUpdate": "",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0007-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 48,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-05T21:25:30.190Z"
+  "status": "none"
 }

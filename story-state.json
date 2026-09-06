@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 6,
+  "episodeCount": 7,
   "currentArc": "Teddy accepts that any meal within arm's reach is communal property.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -47,6 +47,13 @@
       "summary": "Ichigo claimed she wasn't hungry before eating directly from Teddy's saucer.",
       "postedAt": "2026-09-05T20:31:04.521Z",
       "igMediaId": "18020993300862589"
+    },
+    {
+      "n": 7,
+      "title": "A Matter of Posture",
+      "summary": "Teddy stubbornly crammed himself into an undersized saucer rather than admit he needed the big cushion Ichigo offered.",
+      "postedAt": "2026-09-06T18:19:09.018Z",
+      "igMediaId": "18137111839611881"
     }
   ],
   "lastProposedOn": "2026-09-05",
