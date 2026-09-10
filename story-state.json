@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 7,
+  "episodeCount": 8,
   "currentArc": "Teddy accepts that any meal within arm's reach is communal property.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -54,6 +54,13 @@
       "summary": "Teddy stubbornly crammed himself into an undersized saucer rather than admit he needed the big cushion Ichigo offered.",
       "postedAt": "2026-09-06T18:19:09.018Z",
       "igMediaId": "18137111839611881"
+    },
+    {
+      "n": 8,
+      "title": "Just Hold This",
+      "summary": "Teddy and Ichigo accidentally trapped each other into being immobile storage shelves during nest cleanup.",
+      "postedAt": "2026-09-10T19:04:36.286Z",
+      "igMediaId": "18126865417700761"
     }
   ],
   "lastProposedOn": "2026-09-06",

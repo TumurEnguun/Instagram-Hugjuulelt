@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 8,
-  "attempt": 1,
-  "episode": {
-    "title": "Just Hold This",
-    "scene": "Attic living room floor on the sage green rug, bathed in late afternoon golden sunlight. Teddy, a large shaggy apricot Syrian hamster, sits very still on his haunches with a flat, resigned posture, his broad back loaded with a stack of pumpkin seeds and a broad dried oak leaf. Right beside him, Ichigo, a small silvery white dwarf hamster half his size, stands rigidly balanced on all fours with a plump dried rosehip and a curved twig resting across her neat spine. Both hamsters have solid glossy black bead eyes staring straight ahead, completely frozen so nothing falls, surrounded by a scattering of sorting scraps on the floor.",
-    "caption": "It started with 'hold this for a second' and ended in total mutual paralysis.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "cleaningday",
-      "holdthis"
-    ],
-    "arcNote": "Teddy and Ichigo accidentally trapped each other into being immobile storage shelves during nest cleanup.",
-    "arcUpdate": "",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0008-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 51,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-06T19:05:18.520Z"
+  "status": "none"
 }
