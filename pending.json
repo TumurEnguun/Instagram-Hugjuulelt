@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 9,
+  "attempt": 1,
+  "episode": {
+    "title": "The Filing System",
+    "scene": "Attic kitchen corner, late afternoon sunlight washing across a rustic wooden pantry shelf. Large shaggy apricot-orange Teddy sits up straight on his haunches with stubby paws neatly dusted, gazing with quiet pride at an impeccably arranged seed collection sorted into straight, geometric lines from tiny golden millet up to wide flat pumpkin seeds. Tiny silvery-white Ichigo stands beside the neat rows with one foot raised in mid-step, her whiskers twitching and dark glossy bead eyes fixed on the empty spot where her chaotic pile used to live.",
+    "caption": "He spent two hours cataloguing the pantry by kernel diameter. She is now completely unable to locate her third-favourite pumpkin seed.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "organizing",
+      "pantryorganization"
+    ],
+    "arcNote": "Teddy spent the afternoon sorting their entire seed supply by diameter, dismantling Ichigo's intuitive foraging system.",
+    "arcUpdate": "Ichigo now has to ask for coordinates before snacking.",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0009-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 58,
+  "lastUpdateId": 0,
+  "createdAt": "2026-09-10T19:35:33.437Z"
 }
