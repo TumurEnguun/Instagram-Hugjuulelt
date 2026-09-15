@@ -1,7 +1,7 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 8,
-  "currentArc": "Teddy accepts that any meal within arm's reach is communal property.",
+  "episodeCount": 9,
+  "currentArc": "Ichigo now has to ask for coordinates before snacking.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
   ],
@@ -61,6 +61,13 @@
       "summary": "Teddy and Ichigo accidentally trapped each other into being immobile storage shelves during nest cleanup.",
       "postedAt": "2026-09-10T19:04:36.286Z",
       "igMediaId": "18126865417700761"
+    },
+    {
+      "n": 9,
+      "title": "The Filing System",
+      "summary": "Teddy spent the afternoon sorting their entire seed supply by diameter, dismantling Ichigo's intuitive foraging system.",
+      "postedAt": "2026-09-15T19:42:51.798Z",
+      "igMediaId": "18065246066782867"
     }
   ],
   "lastProposedOn": "2026-09-10",
