@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 10,
+  "attempt": 1,
+  "episode": {
+    "title": "Preemptive Portion",
+    "scene": "A sunlit corner of the attic living room in late afternoon, with warm golden light spilling across the weathered floorboards near the patchwork sofa. Tiny silvery-white Ichigo sits upright, briskly sliding a thick, jagged half of a dried apple slice straight into Teddy's front paws. Teddy, sitting large, round, and plush in all his shaggy apricot fur, gazes down with calm, glossy bead eyes at the unsolicited offering resting squarely in his lap. Ichigo grips the remaining smaller, tidy wedge close to her chest with brisk, matter-of-fact determination.",
+    "caption": "She factored in the household tax before she even left the pantry.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "sharingfood",
+      "snacktax"
+    ],
+    "arcNote": "Ichigo preemptively surrendered half a dried apple slice to Teddy before he could even ask.",
+    "arcUpdate": "Teddy now expects unprompted portion splits on all dried fruit.",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0010-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 68,
+  "lastUpdateId": 0,
+  "createdAt": "2026-09-15T20:11:13.674Z"
 }
