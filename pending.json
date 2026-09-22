@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 11,
+  "attempt": 1,
+  "episode": {
+    "title": "The Loudest Quiet",
+    "scene": "Attic living room floor in bright morning sunlight pooling across the timber boards. Teddy, massive and shaggy in his apricot coat, is sitting bolt upright against the base of the patchwork sofa with his stubby front paws pressed tightly to his chest, frozen in place and trying to look as small and blameless as possible beside a scattered pile of smooth wooden buttons. Ichigo, tiny and silvery-white with her neat charcoal dorsal stripe, stands on her hind legs right in front of the mess, briskly and meticulously rebuilding the buttons into a precise vertical stack, her back partially turned to him in total, uninterrupted concentration. Both have round, solid glossy black bead eyes reflecting single white pinpricks of light.",
+    "caption": "She hasn't said a single word, which means he is legally not allowed to move until afternoon.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "silenttreatment",
+      "cleaningup"
+    ],
+    "arcNote": "Ichigo silently rebuilt a fallen stack of buttons while Teddy sat frozen in guilt.",
+    "arcUpdate": "Teddy remains on probation regarding any stacked domestic decor.",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0011-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 78,
+  "lastUpdateId": 0,
+  "createdAt": "2026-09-22T20:08:34.856Z"
 }
