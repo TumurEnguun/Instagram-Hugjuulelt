@@ -1,7 +1,7 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 9,
-  "currentArc": "Ichigo now has to ask for coordinates before snacking.",
+  "episodeCount": 10,
+  "currentArc": "Teddy now expects unprompted portion splits on all dried fruit.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
   ],
@@ -68,6 +68,13 @@
       "summary": "Teddy spent the afternoon sorting their entire seed supply by diameter, dismantling Ichigo's intuitive foraging system.",
       "postedAt": "2026-09-15T19:42:51.798Z",
       "igMediaId": "18065246066782867"
+    },
+    {
+      "n": 10,
+      "title": "Preemptive Portion",
+      "summary": "Ichigo preemptively surrendered half a dried apple slice to Teddy before he could even ask.",
+      "postedAt": "2026-09-22T19:42:51.950Z",
+      "igMediaId": "18006449003969639"
     }
   ],
   "lastProposedOn": "2026-09-15",
