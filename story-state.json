@@ -1,7 +1,7 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 11,
-  "currentArc": "Teddy remains on probation regarding any stacked domestic decor.",
+  "episodeCount": 12,
+  "currentArc": "Ichigo is now fully awake and keeping a silent tally of his failed stealth missions.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
   ],
@@ -82,6 +82,13 @@
       "summary": "Ichigo silently rebuilt a fallen stack of buttons while Teddy sat frozen in guilt.",
       "postedAt": "2026-09-22T20:09:12.840Z",
       "igMediaId": "17982518238110172"
+    },
+    {
+      "n": 12,
+      "title": "The Art of Stealth",
+      "summary": "Teddy attempted a stealthy midnight snack run across the creaky floorboards and woke Ichigo anyway.",
+      "postedAt": "2026-09-23T19:41:31.993Z",
+      "igMediaId": "17878258653544231"
     }
   ],
   "lastProposedOn": "2026-09-23",

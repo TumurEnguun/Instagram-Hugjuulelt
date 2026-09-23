@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 12,
-  "attempt": 1,
-  "episode": {
-    "title": "The Art of Stealth",
-    "scene": "The attic bedroom at night, illuminated by the soft amber glow of a tiny candle on the floor. In the foreground, nestled among folds of muted sage linen and a cream knitted blanket, Ichigo lies curled up, head propped on her front paws, staring flatly into the room with wide glossy black bead eyes. In the middle ground, Teddy, massive and shaggy in apricot fur, is caught frozen mid-tiptoe across the bare floorboards. He holds a single dried pumpkin seed clasped against his chest with both tiny paws, one hind leg raised gingerly in the air, his bead eyes fixed in guilty alarm.",
-    "caption": "Teddy was convinced that doing things in excruciating slow motion made them completely silent.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "tiptoe",
-      "midnightsnack"
-    ],
-    "arcNote": "Teddy attempted a stealthy midnight snack run across the creaky floorboards and woke Ichigo anyway.",
-    "arcUpdate": "Ichigo is now fully awake and keeping a silent tally of his failed stealth missions.",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0012-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 80,
-  "lastUpdateId": 558643628,
-  "createdAt": "2026-09-23T19:37:29.610Z"
+  "status": "none"
 }
