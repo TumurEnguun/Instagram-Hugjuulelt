@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 13,
+  "attempt": 1,
+  "episode": {
+    "title": "The Proper Way",
+    "scene": "In the cosy bedroom nest under warm late-afternoon sunbeams, a single strip of soft dusty-sage flannel fabric sits between the two hamsters. On the left, large fluffy apricot Teddy uses his stubby front paws to carefully smooth and press his end of the fabric completely flat and straight against the wood floor. On the right, tiny silver-white Ichigo is fiercely bunching, crumpling, and kneading her end of the exact same fabric into a tight, chaotic fluff-ball. Both are mid-motion, their glossy black bead eyes locked in stubborn, serious concentration on their respective halves of the blanket.",
+    "caption": "There are two distinct philosophies on how a blanket should be made, and neither will ever yield.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "makingthebed",
+      "domesticlife"
+    ],
+    "arcNote": "Teddy and Ichigo reached an unspoken stalemate over the correct method for smoothing bedding.",
+    "arcUpdate": "They have agreed to disagree on nest geometry, resulting in half-flat, half-crumpled blankets.",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0013-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 84,
+  "lastUpdateId": 0,
+  "createdAt": "2026-09-24T19:56:37.028Z"
 }
