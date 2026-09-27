@@ -44,6 +44,17 @@ jobs:
           cache: npm
       - run: npm ci
 
+      # Anything tapped after last night's final check has been sitting in
+      # Telegram's queue since. Act on it BEFORE proposing: an overnight OK
+      # publishes now and today's episode follows in the same run, instead of
+      # a "still waiting on you" reminder for a tap that was already made.
+      # continue-on-error so a bad publish (token, Instagram outage) still
+      # lets today's proposal go out; check.js has already sent the error to
+      # Telegram, and the pending state is persisted by the step below.
+      - name: Act on any answer from overnight
+        continue-on-error: true
+        run: node src/check.js
+
       - name: Generate episode and ask for approval
         run: node src/propose.js
 
@@ -55,10 +66,15 @@ jobs:
         if: always()
         run: .github/workflows/_persist.sh "Propose post $(date -u +%Y-%m-%d)"
 
-      # The image is live on raw.githubusercontent.com now, so an immediate
-      # approval can publish right away instead of waiting for the next check.
-      - name: Wait briefly for a fast answer
-        run: node src/check.js --wait 10
+      # The image is live on raw.githubusercontent.com now, so stay on the line
+      # for an hour. Redraws and rewrites no longer end this step, and check.js
+      # pushes each new image itself so an OK on it can succeed in the same
+      # window. Actions minutes are free on a public repo, and the repo has to
+      # be public for raw.githubusercontent.com to serve the image anyway.
+      # The backup slots below re-enter this step too when something is still
+      # awaiting, so the bot is effectively live most of the morning.
+      - name: Listen for an answer
+        run: node src/check.js --wait 60
 
       - name: Persist the result
         if: always()

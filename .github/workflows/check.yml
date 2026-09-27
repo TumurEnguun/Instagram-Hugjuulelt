@@ -1,12 +1,21 @@
 name: Check for approval
 
-# Every 30 minutes from the proposal through the Pacific evening.
-# 16:00-23:45 UTC is 9am-4:45pm in Monterey; 00:15-03:45 UTC covers the
-# same evening, 5:15pm-8:45pm, since UTC has rolled over by then.
+# Every 15 minutes from the proposal through the Pacific evening.
+# 16:00-23:45 UTC is 9am-4:45pm in Monterey; 00:00-05:45 UTC covers the
+# same evening, 5pm-10:45pm, since UTC has rolled over by then. Anything
+# tapped after that is handled first thing by the next morning's propose run.
+#
+# Every 15 rather than 30 because GitHub delays and drops scheduled runs, and
+# there is no webhook: between runs nobody is listening, so a tap just sits in
+# Telegram's queue. More slots means a shorter worst case.
+#
+# While a propose run holds the concurrency group (its first hour), the checks
+# queued behind it are cancelled by GitHub. That is expected and harmless:
+# the propose run is already listening for presses.
 on:
   schedule:
-    - cron: '15,45 16-23 * * *'
-    - cron: '15,45 0-3 * * *'
+    - cron: '0,15,30,45 16-23 * * *'
+    - cron: '0,15,30,45 0-5 * * *'
   workflow_dispatch:
 
 concurrency:
