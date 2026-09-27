@@ -14,11 +14,12 @@ New here? Start with [SETUP.md](SETUP.md).
 
 ```
 09:00  propose.yml
+       acts on any button you tapped overnight, then
        reads story-state.json  ->  writes episode N  ->  draws it
        commits the JPEG        ->  Telegram sends it to you with 4 buttons
-       waits 10 minutes for a fast answer
+       stays on the line for an hour, through any redraws
 
-every 30 min until 21:45  check.yml
+every 15 min until 22:45  check.yml
        OK       publish to Instagram, log the episode, delete the JPEG
        Redraw   same story, new art
        New story  throw the episode away, write a different one
@@ -83,6 +84,14 @@ and the Instagram API are free.
 To halve it, set `image.size` to `'1K'` in `src/config.js`.
 
 ## When something breaks
+
+**A button did nothing.** There is no webhook, so a tap only takes effect when
+a run is polling Telegram. Within the first hour after a proposal the answer
+comes within seconds; after that, within about 15 minutes; after 10:45pm, the
+next morning. The button never shows a spinner or toast until a run picks it
+up, so silence does not mean the tap was lost. Do not tap again unless the bot
+tells you to. `npm run listen` makes it instant, but never run it while a
+cloud run is going: both call `getUpdates` and Telegram lets only one win.
 
 **Nothing arrived on Telegram.** Check the Actions run log. If it never ran,
 GitHub disables scheduled workflows on repos with no activity for 60 days;

@@ -76,14 +76,18 @@ export async function sendProposal(jpegBuffer, episode, episodeNumber, attempt) 
  * Look for a button press newer than `offset`.
  * Returns { action, updateId, callbackId } or null if nothing new.
  * Always takes the LATEST press, so changing your mind works.
+ *
+ * `longPollSeconds` > 0 asks Telegram to hold the request open until a press
+ * arrives or the time runs out, so a tap is seen within about a second
+ * instead of at the next fixed poll. Keep it under retryFetch's 30s timeout.
  */
-export async function pollDecision(offset = 0) {
+export async function pollDecision(offset = 0, { longPollSeconds = 0 } = {}) {
   const res = await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       offset: offset ? offset + 1 : undefined,
-      timeout: 0,
+      timeout: longPollSeconds,
       allowed_updates: ['callback_query'],
     }),
   });
@@ -179,13 +183,24 @@ export async function ackButton(callbackId, text) {
   }
 }
 
-/** Wait up to `minutes` for a decision, checking every few seconds. */
+/**
+ * Wait up to `minutes` for a decision.
+ *
+ * Long-polls Telegram, so a press is seen almost immediately. A failed poll
+ * does not end the wait: retryFetch has already tried four times, and one bad
+ * minute at api.telegram.org should not close an hour-long window and leave
+ * the next tap sitting in the queue until the cron comes round.
+ */
 export async function waitForDecision(offset, minutes) {
   const deadline = Date.now() + minutes * 60_000;
   while (Date.now() < deadline) {
-    const decision = await pollDecision(offset);
-    if (decision) return decision;
-    await new Promise((r) => setTimeout(r, 5000));
+    try {
+      const decision = await pollDecision(offset, { longPollSeconds: 20 });
+      if (decision) return decision;
+    } catch (err) {
+      console.warn(`poll failed (${err.message}), still waiting`);
+      await new Promise((r) => setTimeout(r, 5000));
+    }
   }
   return null;
 }
