@@ -1,7 +1,7 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 12,
-  "currentArc": "Ichigo is now fully awake and keeping a silent tally of his failed stealth missions.",
+  "episodeCount": 13,
+  "currentArc": "They have agreed to disagree on nest geometry, resulting in half-flat, half-crumpled blankets.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
   ],
@@ -89,6 +89,13 @@
       "summary": "Teddy attempted a stealthy midnight snack run across the creaky floorboards and woke Ichigo anyway.",
       "postedAt": "2026-09-23T19:41:31.993Z",
       "igMediaId": "17878258653544231"
+    },
+    {
+      "n": 13,
+      "title": "The Proper Way",
+      "summary": "Teddy and Ichigo reached an unspoken stalemate over the correct method for smoothing bedding.",
+      "postedAt": "2026-09-27T19:44:20.517Z",
+      "igMediaId": "18625862377014647"
     }
   ],
   "lastProposedOn": "2026-09-24",
