@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 14,
-  "attempt": 1,
-  "episode": {
-    "title": "Strategic Proximity",
-    "scene": "On the sagging patchwork sofa in the late afternoon sun, Ichigo sits tucked tightly into a small, tense ball with her whiskers drawn back and ears lowered in a quiet funk. Teddy, twice her size in shaggy apricot fluff, has pressed himself directly against her flank, spilling gently over her space with his paws neatly tucked beneath his chest. Both hamsters face forward with wide, solid glossy black bead eyes, each bearing a single tiny white catchlight, staring quietly into the warm room as soft dust motes drift in the golden light.",
-    "caption": "He didn't ask what happened. He simply shifted two inches to the left and applied two hundred grams of immovable, warm flank.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "badday",
-      "silentcomfort"
-    ],
-    "arcNote": "Teddy offered silent solidarity to a brooding Ichigo by wedging himself against her on the sofa.",
-    "arcUpdate": "Ichigo has quietly accepted Teddy as an immovable emotional ballast on bad days.",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0014-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 90,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-27T20:04:59.250Z"
+  "status": "none"
 }
