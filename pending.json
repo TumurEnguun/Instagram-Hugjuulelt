@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 16,
-  "attempt": 1,
-  "episode": {
-    "title": "Wide Awake",
-    "scene": "Late evening in the living room under the warm amber glow of a low table lamp. Teddy, large and shaggy with apricot fur, sits upright on the wooden floor holding a single sunflower seed between his stubby paws, gazing down with a calm, deadpan expression. Pressed against his soft flank is Ichigo, who has collapsed into deep sleep mid-gesture, her tiny white body slumped sideways with her snout buried into his fur and one little front paw still rigidly raised in the air.",
-    "caption": "She had four more very important points to make.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "fallingasleep",
-      "bedtimestories"
-    ],
-    "arcNote": "Ichigo vigorously insisted she was wide awake before instantly collapsing asleep against Teddy mid-sentence.",
-    "arcUpdate": "Content in their evening routines, with Ichigo unable to out-stubborn basic exhaustion.",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0016-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 97,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-29T20:39:20.756Z"
+  "status": "none"
 }
