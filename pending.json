@@ -1,25 +1,3 @@
 {
-  "status": "awaiting",
-  "episodeNumber": 15,
-  "attempt": 1,
-  "episode": {
-    "title": "High Stakes",
-    "scene": "Late afternoon beside the round attic window. Ichigo and Teddy are squeezed tightly together on the weathered sill, cheeks squashed side-by-side so their heads are touching, both staring intently at the glass. Ichigo leans forward on her tiny white front paws, whiskers angled forward in intense concentration. Beside her, massive Teddy is wedged snugly against the frame to fit, his shaggy apricot fur compressed and his stubby paws resting placidly against his cream chest as he dutifully watches the exact same spot. On the outside of the pane, two fat raindrops are trickling side-by-side down the misty glass. Soft honey-toned afternoon light filters through the window, illuminating dust motes and catching the glossy single highlights in their solid black bead eyes.",
-    "caption": "She called him over with absolute urgency. It was two raindrops racing to the sill.",
-    "hashtags": [
-      "teddyandichigo",
-      "couplescomic",
-      "sliceoflifecomic",
-      "raindroprace",
-      "windowwatching"
-    ],
-    "arcNote": "Ichigo urgently summoned Teddy to spectate a high-stakes raindrop race on the attic window.",
-    "arcUpdate": "Fully content sharing intense, low-stakes nonsense cheek-to-cheek.",
-    "newRunningGag": ""
-  },
-  "filename": "ep-0015-v1.jpg",
-  "aspectRatio": "4:5",
-  "telegramMessageId": 93,
-  "lastUpdateId": 0,
-  "createdAt": "2026-09-28T21:48:11.291Z"
+  "status": "none"
 }
