@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 17,
+  "attempt": 1,
+  "episode": {
+    "title": "A Very Thorough Account",
+    "scene": "In the attic living room in warm late-afternoon sun, Teddy sits upright beside a sprawling arrangement of pine nuts and oat flakes on the woven rug, earnestly gesturing with one stubby front paw mid-explanation. Opposite him, tiny Ichigo is sprawled comfortably flat on her stomach, her pointed chin propped up on both front paws, gazing at him with alert black bead eyes and a fond, amused expression.",
+    "caption": "She lost the plot about five minutes ago, but he is having the time of his life explaining the seed drawer inventory.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "storytime",
+      "listening"
+    ],
+    "arcNote": "Teddy gave Ichigo an exhaustively detailed breakdown of his afternoon foraging decisions while she happily tuned out and watched him talk.",
+    "arcUpdate": "Ichigo is increasingly patient with Teddy's meticulous monologues, finding them endearing.",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0017-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 99,
+  "lastUpdateId": 0,
+  "createdAt": "2026-09-30T20:44:19.111Z"
 }
