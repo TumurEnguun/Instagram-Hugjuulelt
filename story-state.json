@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 17,
+  "episodeCount": 18,
   "currentArc": "Ichigo is increasingly patient with Teddy's meticulous monologues, finding them endearing.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -124,6 +124,13 @@
       "summary": "Teddy gave Ichigo an exhaustively detailed breakdown of his afternoon foraging decisions while she happily tuned out and watched him talk.",
       "postedAt": "2026-09-30T21:11:34.020Z",
       "igMediaId": "18353327032220335"
+    },
+    {
+      "n": 18,
+      "title": "Mutual Alibi",
+      "summary": "Teddy and Ichigo caught each other looking at the exact same time and silently agreed to pretend it never happened.",
+      "postedAt": "2026-10-01T21:47:02.426Z",
+      "igMediaId": "17870303736643421"
     }
   ],
   "lastProposedOn": "2026-10-01",
