@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 18,
+  "attempt": 1,
+  "episode": {
+    "title": "Mutual Alibi",
+    "scene": "Late afternoon sun pools across the attic floorboards beside a terracotta saucer filled with dried clover. Teddy sits slumped in a plush apricot heap, holding a sunflower seed between both paws but frozen mid-nibble, his head swivelled directly to the right. Beside him, tiny silvery-white Ichigo perches on a smoothed river pebble, one paw paused against her cheek whiskers mid-groom, head turned directly left to face him. Their round, glossy black bead eyes are locked in an unblinking, deadpan stare across the short gap between them, both completely motionless.",
+    "caption": "Two entirely innocent glances that happened to collide at the exact same second. Neither plans to bring it up.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "caughtlooking",
+      "wholesomecomics"
+    ],
+    "arcNote": "Teddy and Ichigo caught each other looking at the exact same time and silently agreed to pretend it never happened.",
+    "arcUpdate": "",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0018-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 102,
+  "lastUpdateId": 0,
+  "createdAt": "2026-10-01T20:58:02.427Z"
 }
