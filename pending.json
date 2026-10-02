@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 19,
+  "attempt": 1,
+  "episode": {
+    "title": "Equal Distribution",
+    "scene": "Night in the attic bedroom, lit by the warm, dim amber glow of a single tallow candle off to the side. Teddy is curled into a massive, blissful spherical bundle, entirely wrapped in three snug layers of a soft sage-green knitted blanket like an oversized pastry, fast asleep. Only his blunt cream snout and tufted apricot ears stick out. Ichigo sits beside him on the bare woven straw mattress, sitting bolt upright with alert bead eyes and holding the very last taut, three-millimetre frayed corner of the hem between her two tiny white paws.",
+    "caption": "Teddy maintains he simply turned over once and geometry did the rest.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "blankethog",
+      "bedtimestruggles"
+    ],
+    "arcNote": "Teddy monopolised the entire nest blanket during the night while Ichigo was left holding the hem.",
+    "arcUpdate": "",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0019-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 105,
+  "lastUpdateId": 0,
+  "createdAt": "2026-10-02T20:36:20.212Z"
 }
