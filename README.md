@@ -57,6 +57,7 @@ npm run propose:dry    # generate locally, save to posts/, send nothing
 npm run propose        # generate and ask on Telegram
 npm run check          # act on the latest button press
 npm run refresh-token  # renew the Instagram token
+npm run probe -- nike  # test reading other public IG accounts (social-watch prep)
 ```
 
 `DEBUG=1` on any of them prints full stack traces.

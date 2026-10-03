@@ -2,3 +2,4 @@
 node_modules/
 *.local
 .doctor-cache.json
+.claude/
