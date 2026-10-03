@@ -1,6 +1,6 @@
 {
   "seriesTitle": "Teddy & Ichigo",
-  "episodeCount": 19,
+  "episodeCount": 20,
   "currentArc": "Ichigo is increasingly patient with Teddy's meticulous monologues, finding them endearing.",
   "runningGags": [
     "Teddy holding a catchment bowl for Ichigo's overambitious hoards."
@@ -138,6 +138,13 @@
       "summary": "Teddy monopolised the entire nest blanket during the night while Ichigo was left holding the hem.",
       "postedAt": "2026-10-02T21:53:12.621Z",
       "igMediaId": "18343862239268671"
+    },
+    {
+      "n": 20,
+      "title": "Anything Is Fine",
+      "summary": "Ichigo rejected every pantry option while insisting she had no preference.",
+      "postedAt": "2026-10-03T19:30:42.369Z",
+      "igMediaId": "17884116420688069"
     }
   ],
   "lastProposedOn": "2026-10-03",
