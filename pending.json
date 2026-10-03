@@ -1,3 +1,25 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "episodeNumber": 20,
+  "attempt": 1,
+  "episode": {
+    "title": "Anything Is Fine",
+    "scene": "The small attic kitchen bathed in warm evening lamplight. On the worn wooden counter, three mismatched ceramic dishes sit in a neat row, each filled with a different food: sunflower seeds, rolled oats, and dried clover blossoms. Ichigo, tiny and silvery-white with her dark dorsal stripe, stands upright on her hind legs with her back turned decisively to the dishes, looking up expectantly at Teddy with bright, solid black bead eyes and twitching whiskers. Teddy, enormous and shaggy in his apricot-orange fur, sits solidly on his haunches holding a single dried pumpkin seed between his stubby front paws, gazing back at her with calm, deadpan patience.",
+    "caption": "She is completely easy and will eat whatever he wants, provided it is not any of the four things they actually own.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "whattoeat",
+      "dinnerdecision"
+    ],
+    "arcNote": "Ichigo rejected every pantry option while insisting she had no preference.",
+    "arcUpdate": "",
+    "newRunningGag": ""
+  },
+  "filename": "ep-0020-v1.jpg",
+  "aspectRatio": "4:5",
+  "telegramMessageId": 108,
+  "lastUpdateId": 0,
+  "createdAt": "2026-10-03T19:09:43.549Z"
 }
