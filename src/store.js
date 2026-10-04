@@ -41,6 +41,62 @@ export const clearPending = () => writeJson(paths.pending, EMPTY_PENDING);
 export const readTrends = () => readJson(paths.trends, { date: '' });
 export const writeTrends = (t) => writeJson(paths.trends, t);
 
+// Remix inbox: trend videos Enguun sends the bot, and the buttons on them.
+const EMPTY_REMIX = { seenUpdateId: 0, jobs: [], presses: [], notices: [] };
+export const readRemix = () => ({ ...structuredClone(EMPTY_REMIX), ...readJson(paths.remix, EMPTY_REMIX) });
+export const writeRemix = (r) => writeJson(paths.remix, r);
+
+/**
+ * Save anything remix-related out of a batch of Telegram updates BEFORE the
+ * caller confirms them. Every reader of the queue calls this, because
+ * confirming an update deletes it for good: without this, a video sent while a
+ * proposal was pending would be thrown away by the next drain.
+ *
+ * Only messages from Enguun's own chat count. Deduplicated by update_id.
+ */
+export function stashUpdates(results) {
+  if (!results?.length) return;
+  const chatId = String(process.env.TELEGRAM_CHAT_ID ?? '');
+  const r = readRemix();
+  let changed = false;
+
+  for (const u of results) {
+    if (u.update_id <= r.seenUpdateId) continue;
+    r.seenUpdateId = u.update_id;
+    changed = true;
+
+    const m = u.message;
+    if (m && String(m.chat?.id) === chatId) {
+      const vid = m.video ?? (m.document && /^video\//.test(m.document.mime_type ?? '') ? m.document : null);
+      if (vid) {
+        r.jobs.push({
+          id: `rx${u.update_id}`,
+          fileId: vid.file_id,
+          fileSize: vid.file_size ?? 0,
+          note: m.caption ?? '',
+          status: 'new',
+          attempt: 0,
+          receivedAt: new Date().toISOString(),
+        });
+      } else if (typeof m.text === 'string') {
+        if (/instagram\.com\/(reel|p)\/|tiktok\.com\//i.test(m.text)) {
+          r.notices.push('link');
+        } else {
+          // A text right after a video is treated as casting notes for it.
+          const last = [...r.jobs].reverse().find((j) => j.status === 'new');
+          if (last) last.note = [last.note, m.text].filter(Boolean).join(' ');
+        }
+      }
+    }
+
+    const cb = u.callback_query;
+    if (cb && String(cb.data ?? '').startsWith('RMX')) {
+      r.presses.push({ data: cb.data, callbackId: cb.id, updateId: u.update_id });
+    }
+  }
+  if (changed) writeRemix(r);
+}
+
 export function readBible() {
   if (!fs.existsSync(paths.bible)) {
     throw new Error('bible.md not found. Run `npm run bootstrap` first to create the hamsters.');

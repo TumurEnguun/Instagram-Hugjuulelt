@@ -21,7 +21,7 @@ BRANCH="${GITHUB_BRANCH:-main}"
 git config user.name "hamster-bot"
 git config user.email "hamster-bot@users.noreply.github.com"
 
-git add -A posts pending.json story-state.json trends.json
+git add -A posts pending.json story-state.json trends.json remix.json remix
 
 if git diff --staged --quiet; then
   echo "Nothing to persist."

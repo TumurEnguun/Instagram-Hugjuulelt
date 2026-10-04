@@ -25,6 +25,8 @@ export const paths = {
   state: path.join(ROOT, 'story-state.json'),
   pending: path.join(ROOT, 'pending.json'),
   trends: path.join(ROOT, 'trends.json'),
+  remix: path.join(ROOT, 'remix.json'),
+  remixDir: path.join(ROOT, 'remix'),
 };
 
 export const models = {
@@ -45,6 +47,29 @@ export const image = {
   aspectRatios: ['4:5', '3:4', '1:1'],
   size: '2K',
   jpegQuality: 90,
+};
+
+/**
+ * Reels via Higgsfield. A video day comes round every `everyNDays` days, counted
+ * from the last Reel actually posted, so a skipped video day rolls forward.
+ *
+ * Kling 2.6 Pro: 5 s at roughly $0.07/s, so about $0.35 per clip. 5 seconds is
+ * deliberate: a short loop gets rewatched, which is what Reels reward, and the
+ * longer a clip runs the more chances the model has to drift off-model.
+ */
+export const video = {
+  model: 'kling-video/v2.6/pro/image-to-video',
+  duration: 5,
+  aspectRatio: '9:16',
+  // Kling generates its own audio when on. The motion prompt asks for quiet
+  // room tone and tiny foley only, never voices or music.
+  sound: 'on',
+  // How literally Kling follows the prompt (0-1). Slightly above the 0.5
+  // default keeps it on the described action instead of improvising.
+  cfgScale: 0.6,
+  everyNDays: 2,
+  // Each redraw is another paid generation. Stop runaway spend on one episode.
+  maxAttempts: 4,
 };
 
 /** Read a required env var, failing loudly rather than at the API call. */

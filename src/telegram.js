@@ -5,6 +5,11 @@
  */
 import { need } from './config.js';
 import { retryFetch } from './net.js';
+import { stashUpdates } from './store.js';
+
+// Telegram REMEMBERS allowed_updates between calls. Asking for callback_query
+// alone would make it silently drop every video Enguun sends the bot.
+const UPDATE_TYPES = ['callback_query', 'message'];
 
 const api = (method) => `https://api.telegram.org/bot${need('TELEGRAM_BOT_TOKEN')}/${method}`;
 
@@ -73,6 +78,50 @@ export async function sendProposal(jpegBuffer, episode, episodeNumber, attempt) 
 }
 
 /**
+ * Send a Reel proposal: the clip itself, uploaded so it plays inline, plus
+ * buttons. "Redraw" re-animates the same painted frame (one more paid clip);
+ * "Post as photo" falls back to the still if the animation is not good enough.
+ */
+export async function sendVideoProposal(mp4Buffer, episode, episodeNumber, attempt) {
+  const caption = [
+    `🎬 <b>Reel, episode ${episodeNumber}: ${escapeHtml(episode.title)}</b>`,
+    '',
+    escapeHtml(episode.caption),
+    '',
+    episode.hashtags.map((h) => `#${h}`).join(' '),
+  ].join('\n');
+  const tag = (action) => `${action}:${episodeNumber}:${attempt}`;
+
+  const form = new FormData();
+  form.append('chat_id', need('TELEGRAM_CHAT_ID'));
+  form.append('caption', caption.slice(0, 1024));
+  form.append('parse_mode', 'HTML');
+  form.append('supports_streaming', 'true');
+  form.append('video', new Blob([mp4Buffer], { type: 'video/mp4' }), 'reel.mp4');
+  form.append(
+    'reply_markup',
+    JSON.stringify({
+      inline_keyboard: [
+        [
+          { text: 'OK, post the Reel', callback_data: tag('OK') },
+          { text: 'Re-animate', callback_data: tag('AGAIN') },
+        ],
+        [
+          { text: 'Post as photo', callback_data: tag('PHOTO') },
+          { text: 'New story', callback_data: tag('REWRITE') },
+        ],
+        [{ text: 'Skip today', callback_data: tag('SKIP') }],
+      ],
+    })
+  );
+
+  const res = await retryFetch(api('sendVideo'), { method: 'POST', body: form }, { timeoutMs: 120_000 });
+  const json = await res.json();
+  if (!json.ok) throw new Error(`Telegram sendVideo failed: ${json.description}`);
+  return json.result;
+}
+
+/**
  * Send today's trend options as buttons. Tapping one decides what tomorrow's
  * writer builds the episode around; "Just the story" skips trends for the day.
  */
@@ -117,14 +166,21 @@ export async function pollDecision(offset = 0, { longPollSeconds = 0 } = {}) {
     body: JSON.stringify({
       offset: offset ? offset + 1 : undefined,
       timeout: longPollSeconds,
-      allowed_updates: ['callback_query'],
+      allowed_updates: UPDATE_TYPES,
     }),
   });
   const json = await res.json();
   if (!json.ok) throw new Error(`Telegram getUpdates failed: ${json.description}`);
 
-  const presses = json.result.filter((u) => u.callback_query);
-  if (presses.length === 0) return null;
+  stashUpdates(json.result);
+  // Remix buttons are handled by remix.js from the stash, not here.
+  const presses = json.result.filter((u) => u.callback_query && !String(u.callback_query.data ?? '').startsWith('RMX'));
+  if (presses.length === 0) {
+    // Only messages or remix taps, all stashed already. Confirm them so a long
+    // poll does not keep returning the same update instantly in a busy loop.
+    if (json.result.length) await confirmUpdates(json.result[json.result.length - 1].update_id);
+    return null;
+  }
 
   const latest = presses[presses.length - 1];
   const [action, episodeNumber, attempt] = String(latest.callback_query.data).split(':');
@@ -173,11 +229,12 @@ export async function drainUpdates() {
   const res = await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ timeout: 0, allowed_updates: ['callback_query'] }),
+    body: JSON.stringify({ timeout: 0, allowed_updates: UPDATE_TYPES }),
   });
   const json = await res.json();
   if (!json.ok) throw new Error(`Telegram getUpdates failed: ${json.description}`);
   if (json.result.length === 0) return 0;
+  stashUpdates(json.result);
 
   const maxId = json.result[json.result.length - 1].update_id;
 
@@ -186,7 +243,7 @@ export async function drainUpdates() {
   await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ offset: maxId + 1, timeout: 0 }),
+    body: JSON.stringify({ offset: maxId + 1, timeout: 0, allowed_updates: UPDATE_TYPES }),
   });
   return maxId;
 }
@@ -206,8 +263,68 @@ export async function confirmUpdates(upToId) {
   await retryFetch(api('getUpdates'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ offset: upToId + 1, timeout: 0 }),
+    body: JSON.stringify({ offset: upToId + 1, timeout: 0, allowed_updates: UPDATE_TYPES }),
   });
+}
+
+/**
+ * For remix.js: pull pending updates into the stash. Confirms them only up to
+ * (not including) the first approval-button press, so a tap meant for the
+ * daily proposal is still there for check.js.
+ */
+export async function syncUpdates() {
+  const res = await retryFetch(api('getUpdates'), {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ timeout: 0, allowed_updates: UPDATE_TYPES }),
+  });
+  const json = await res.json();
+  if (!json.ok) throw new Error(`Telegram getUpdates failed: ${json.description}`);
+  stashUpdates(json.result);
+
+  let safeUpTo = 0;
+  for (const u of json.result) {
+    const isProposalPress = u.callback_query && !String(u.callback_query.data ?? '').startsWith('RMX');
+    if (isProposalPress) break;
+    safeUpTo = u.update_id;
+  }
+  if (safeUpTo) await confirmUpdates(safeUpTo);
+}
+
+/** Download a file the user sent (bots can fetch up to 20 MB). */
+export async function downloadFile(fileId) {
+  const info = await call('getFile', { file_id: fileId });
+  const res = await retryFetch(`https://api.telegram.org/file/bot${need('TELEGRAM_BOT_TOKEN')}/${info.file_path}`, {}, { timeoutMs: 120_000 });
+  if (!res.ok) throw new Error(`Downloading from Telegram failed (${res.status}).`);
+  return Buffer.from(await res.arrayBuffer());
+}
+
+/** Send a photo with arbitrary buttons. */
+export async function sendPhotoWithButtons(jpeg, caption, inlineKeyboard) {
+  const form = new FormData();
+  form.append('chat_id', need('TELEGRAM_CHAT_ID'));
+  form.append('caption', caption.slice(0, 1024));
+  form.append('parse_mode', 'HTML');
+  form.append('photo', new Blob([jpeg], { type: 'image/jpeg' }), 'frame.jpg');
+  form.append('reply_markup', JSON.stringify({ inline_keyboard: inlineKeyboard }));
+  const res = await retryFetch(api('sendPhoto'), { method: 'POST', body: form });
+  const json = await res.json();
+  if (!json.ok) throw new Error(`Telegram sendPhoto failed: ${json.description}`);
+  return json.result;
+}
+
+/** Send a video (bytes) with a caption. */
+export async function sendVideoFile(mp4, caption, filename = 'reel.mp4') {
+  const form = new FormData();
+  form.append('chat_id', need('TELEGRAM_CHAT_ID'));
+  form.append('caption', caption.slice(0, 1024));
+  form.append('parse_mode', 'HTML');
+  form.append('supports_streaming', 'true');
+  form.append('video', new Blob([mp4], { type: 'video/mp4' }), filename);
+  const res = await retryFetch(api('sendVideo'), { method: 'POST', body: form }, { timeoutMs: 120_000 });
+  const json = await res.json();
+  if (!json.ok) throw new Error(`Telegram sendVideo failed: ${json.description}`);
+  return json.result;
 }
 
 /** Stops the spinner on the tapped button and shows a toast. */

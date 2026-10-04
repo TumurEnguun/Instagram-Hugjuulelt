@@ -18,7 +18,10 @@
     "fb-setup": "node src/fb-setup.js",
     "insights": "node src/insights.js",
     "probe": "node src/probe.js",
-    "trends": "node src/trends.js"
+    "trends": "node src/trends.js",
+    "reel:custom": "node src/reel-custom.js",
+    "remix": "node src/remix.js",
+    "remix:watch": "node src/remix.js --watch"
   },
   "dependencies": {
     "@google/genai": "^1.40.0",

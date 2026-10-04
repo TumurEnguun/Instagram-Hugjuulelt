@@ -59,6 +59,29 @@ export async function publishPhoto(imageUrl, caption) {
   return published.id;
 }
 
+/**
+ * Publish a Reel from a public video URL (Higgsfield's output link works).
+ * Video containers take much longer to process than photos, so wait up to
+ * about five minutes. share_to_feed puts it on the grid as well as the Reels tab.
+ */
+export async function publishReel(videoUrl, caption) {
+  const igId = need('IG_USER_ID');
+
+  const container = await graph(`/${igId}/media`, {
+    media_type: 'REELS',
+    video_url: videoUrl,
+    caption,
+    share_to_feed: 'true',
+  });
+  if (!container.id) throw new Error('Instagram did not return a container id for the Reel.');
+
+  await waitForContainer(container.id, { attempts: 60, delayMs: 5000 });
+
+  const published = await graph(`/${igId}/media_publish`, { creation_id: container.id });
+  if (!published.id) throw new Error('Instagram did not return a published media id for the Reel.');
+  return published.id;
+}
+
 /** Sanity check used by the workflows and setup, so failures are legible. */
 export async function checkAccount() {
   const igId = need('IG_USER_ID');

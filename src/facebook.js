@@ -45,6 +45,22 @@ export async function publishPhoto(imageUrl, caption) {
   return json.post_id ?? json.id;
 }
 
+/** Publish a video to the Page by URL. Same never-throw-past-Instagram rules apply at the caller. */
+export async function publishVideo(videoUrl, description) {
+  if (!isConfigured()) return null;
+
+  const body = new URLSearchParams({
+    file_url: videoUrl,
+    description,
+    access_token: optional('FB_PAGE_ACCESS_TOKEN'),
+  });
+  const res = await retryFetch(`${GRAPH}/${optional('FB_PAGE_ID')}/videos`, { method: 'POST', body }, { timeoutMs: 120_000 });
+  const json = await res.json().catch(() => ({}));
+  if (json.error) throw new Error(`Facebook video error: ${json.error.message}`);
+  if (!json.id) throw new Error('Facebook did not return a video id.');
+  return json.id;
+}
+
 /**
  * Sanity check used by doctor.
  *

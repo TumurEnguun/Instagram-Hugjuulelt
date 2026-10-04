@@ -53,6 +53,11 @@ const EPISODE_SCHEMA = {
       type: 'string',
       description: 'A new running gag introduced this episode, or empty string.',
     },
+    motion: {
+      type: 'string',
+      description:
+        'REEL DAYS ONLY, otherwise empty string. The 5 seconds that follow the still, as a timed motion script. See the REEL rules in the prompt.',
+    },
   },
   required: ['title', 'scene', 'caption', 'hashtags', 'arcNote'],
 };
@@ -90,8 +95,70 @@ const BEATS = [
   'CAUGHT LOOKING. One glances over fondly and is caught doing it. Neither mentions it.',
 ];
 
+/**
+ * Extra writer instructions on Reel days.
+ *
+ * Image-to-video models do best with ONE small, physical, clearly timed action
+ * that starts from the exact pose in the first frame. Vague prompts ("they
+ * have fun") produce mush: drifting faces, morphing paws, random camera moves.
+ * So the writer has to direct it like a 5-second animation shot.
+ */
+const REEL_RULES = `
+=== THIS EPISODE IS A REEL (5-second animation) ===
+The still you describe in "scene" becomes FRAME ONE of a 5-second animated clip.
+So:
+- "scene" must show the moment JUST BEFORE the action: the setup pose, with the
+  key prop already in frame. Not the aftermath. The animation needs somewhere to go.
+- Compose it for a tall vertical 9:16 phone screen: both hamsters in the middle
+  of the frame, fully visible, with room above and around them to move. Nothing
+  important at the very top or bottom edge (Instagram covers those with UI).
+
+Then write "motion", the 5 seconds that follow, as a timed script:
+  0-1.5s  anticipation: a small lead-in (a glance, a sniff, a wiggle)
+  1.5-3.5s THE ACTION: one clear physical beat that IS the joke or the warm moment
+  3.5-5s  reaction and hold: the other hamster reacts, then a beat of stillness
+          that ends close to the opening pose, so the clip loops cleanly
+Rules for motion:
+- ONE action. Small, physical, readable without sound or text.
+- Hamster-sized physics: quick little movements with soft weight. Cheek pouches
+  puffing, whiskers twitching, ears flicking, noses wiggling, tiny hops, a
+  scurry, paws clutching food. Never human dancing, never talking or lip-sync,
+  never gestures a hamster could not make.
+- Only things already in the still may move. Nothing new enters the frame.
+- Camera: locked off, or ONE slow gentle move (a soft push-in or slight drift).
+  Name which. No cuts, no zooms, no shake, no spinning.
+- Sound: soft ambient room tone plus one or two tiny sounds tied to the action
+  (seed crunch, paws on wood, a blanket rustle, a tiny squeak). Never voices,
+  speech, singing or music.
+- Present tense, concrete, under 90 words. Describe only what is seen and heard.
+`;
+
+/**
+ * Turn the writer's motion script into the final image-to-video prompt.
+ *
+ * Kling has no negative prompt, so every "don't" is phrased as a positive lock
+ * on what must stay the same. The style and character locks matter most: the
+ * whole account depends on the clip looking like the painting came to life,
+ * not like a different 3D hamster.
+ */
+export function buildMotionPrompt(motion) {
+  return `Animate this hand-painted storybook illustration so the painting itself comes to life.
+
+ACTION: ${motion}
+
+STYLE LOCK: keep exactly the look of the input image: soft gouache and watercolour texture, visible brushwork, gentle paper grain, the same warm light and the same colours. It must stay a moving painting. Not 3D, not glossy, not photoreal, not cartoon-smooth.
+
+CHARACTER LOCK: exactly two hamsters, identical to the image: same fur colours and markings, same round body shapes, same ears, solid glossy black bead eyes. Four paws each. Their faces and bodies keep their shape the whole time: nothing morphs, melts, stretches or swaps. No other animals, no people, no hands, no text, no logos.
+
+MOTION: small, soft, hamster-sized movements with gentle weight. Subtle breathing and whisker twitches throughout so nobody is ever frozen. The room and furniture stay still; only light and floating dust may shimmer.
+
+CAMERA: one continuous shot, no cuts, steady and smooth, following the camera direction above.
+
+SOUND: quiet room tone and small, soft foley sounds from the action. No voices, no speech, no singing, no music.`;
+}
+
 /** Ask the writer model for the next episode, given everything that came before. */
-export async function writeEpisode(state, bible, { avoidScene = '', trend = null } = {}) {
+export async function writeEpisode(state, bible, { avoidScene = '', trend = null, reel = false } = {}) {
   const beat = BEATS[state.episodeCount % BEATS.length];
 
   // A picked trend replaces the rotating situation for the day. The couple
@@ -219,6 +286,7 @@ audience. Five precise tags beat ten vague ones.
   - 2 tags describing THIS episode specifically, drawn from what happens in it
 Never use enormous generic pools like cute, love, art, illustration, relatable,
 funny or instagood. The post will never surface there and the slot is wasted.
+${reel ? REEL_RULES : ''}
 ${avoidScene ? `\nThe following scene was just rejected. Write something clearly different:\n"${avoidScene}"` : ''}`;
 
   const res = await ai().models.generateContent({
@@ -258,7 +326,7 @@ function extractImage(res) {
  *
  * Returns a JPEG buffer, because Instagram accepts nothing else.
  */
-export async function drawPanel(scene, bible, refs) {
+export async function drawPanel(scene, bible, refs, { aspectRatios = image.aspectRatios, frameNote = '' } = {}) {
   const prompt = `Illustrate this scene as a single finished storybook illustration.
 
 === ART AND CHARACTER BIBLE (follow exactly) ===
@@ -272,7 +340,7 @@ they saw yesterday.
 
 === SCENE ===
 ${scene}
-
+${frameNote ? `\n=== THIS IS AN ANIMATION KEYFRAME ===\n${frameNote}\n` : ''}
 === HOW TO PAINT IT ===
 - Painterly storybook illustration: visible brushwork, soft gouache and
   watercolour texture, gentle paper grain. Hand-painted, never glossy or plastic.
@@ -304,7 +372,7 @@ ${scene}
   ];
 
   let lastErr;
-  for (const aspectRatio of image.aspectRatios) {
+  for (const aspectRatio of aspectRatios) {
     try {
       const res = await ai().models.generateContent({
         model: models.artist,

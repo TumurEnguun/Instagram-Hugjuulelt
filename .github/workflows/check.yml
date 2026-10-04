@@ -36,6 +36,8 @@ jobs:
       FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      HF_API_KEY_ID: ${{ secrets.HF_API_KEY_ID }}
+      HF_API_KEY_SECRET: ${{ secrets.HF_API_KEY_SECRET }}
       GITHUB_BRANCH: ${{ github.ref_name }}
 
     steps:
@@ -48,6 +50,13 @@ jobs:
 
       - name: Act on the latest Telegram answer
         run: node src/check.js
+
+      # Trend videos sent to the bot: analyse, paint, and (after a tap) remix.
+      # continue-on-error so a remix problem never blocks saving the approval
+      # state above; remix.js reports its own errors on Telegram.
+      - name: Handle remix videos
+        continue-on-error: true
+        run: node src/remix.js
 
       # check.js may have already published to Instagram by this point, so
       # losing this push means the remote still says "awaiting" for a live

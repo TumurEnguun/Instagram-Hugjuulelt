@@ -49,6 +49,46 @@ so bio ideas are for you to paste in yourself.
 
 `trends.json` records today's options and which one was picked.
 
+## Reels (Higgsfield)
+
+With `HF_API_KEY_ID` and `HF_API_KEY_SECRET` set, every second day is a 5-second
+Reel instead of a photo (counted from the last Reel that actually went live).
+
+1. The writer also writes a timed motion script: 0-1.5s lead-in, 1.5-3.5s the
+   action, 3.5-5s reaction and a hold that loops back to the start.
+2. A vertical 9:16 keyframe is painted with the same character refs, posed just
+   before the action, with Instagram's UI zones kept clear.
+3. Higgsfield (Kling 2.6 Pro) animates that exact painting. The prompt locks
+   the painted style, both characters, hamster-sized motion, one steady camera
+   and quiet foley with no voices or music.
+4. The clip arrives on Telegram: **OK, post the Reel**, **Re-animate** (same
+   painting, new animation, max 4 per episode), **Post as photo** (4:5 crop of
+   the keyframe), **New story**, **Skip today**.
+
+If Higgsfield fails, you get the photo version instead; failed jobs are not
+billed. Settings live in `video` in `src/config.js`.
+
+## Remix inbox: send the bot a trend video
+
+See a trend you want? Save the video (Instagram: Share → Download, TikTok: Save
+video, or screen-record) and **send the video file to the bot** in Telegram.
+Links do not work; there is no API to download other people's Reels. Add a note
+if you like, e.g. "Teddy main, Ichigos crowd".
+
+1. Gemini watches the clip and labels it: trend, song, beats, who becomes whom,
+   and anything off-brand it swaps (cigarette → sunflower seed).
+2. You get the painted first frame with **Make it / Repaint frame / Cancel**.
+   Nothing paid happens before you tap.
+3. **Make it** runs Higgsfield motion transfer: the clip's exact movement,
+   timing and formation, performed by the hamsters in the painted style.
+4. The MP4 comes back on Telegram. Post it from the Instagram app with the
+   trend's sound (the API cannot attach music).
+
+The 15-minute check workflow runs `src/remix.js`, so replies take up to about
+15-30 minutes. At your PC, `npm run remix:watch` reacts within seconds.
+Clips must be under 20 MB (bot download limit); 4-30 s is what motion transfer
+uses.
+
 ## Keeping the hamsters consistent
 
 This is the part that makes or breaks the account, and it rests on three files.
@@ -76,6 +116,7 @@ npm run bootstrap      # one time: design and lock the two hamsters
 npm run propose:dry    # generate locally, save to posts/, send nothing
 npm run trends         # print today's trend options, send nothing
 npm run propose:dry -- --trend   # dry run built around the best trend
+npm run propose:dry -- --trend --video   # dry run Reel (~$0.35), saved to posts/
 npm run propose        # generate and ask on Telegram
 npm run check          # act on the latest button press
 npm run refresh-token  # renew the Instagram token

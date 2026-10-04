@@ -8,7 +8,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { paths } from './config.js';
 import { propose } from './decide.js';
-import { writeEpisode, drawPanel } from './gemini.js';
+import { writeEpisode, drawPanel, buildMotionPrompt } from './gemini.js';
+import * as higgsfield from './higgsfield.js';
+import { video } from './config.js';
 import { readState, readBible, readCharacterRefs, readPending, runOncePerDay, SKIPPED, readTrends, writeTrends, today } from './store.js';
 import { sendMessage, sendTrendOptions, drainUpdates, waitForDecision, confirmUpdates, ackButton, escapeHtml } from './telegram.js';
 import { scoutTrends } from './trends.js';
@@ -99,18 +101,39 @@ async function dry() {
     console.log(`Trend: ${trend ? trend.name : '(none fits today)'}`);
   }
 
-  const episode = await writeEpisode(state, bible, { trend });
+  // --video: make a Reel the way a video day would (costs about $0.35).
+  const reel = process.argv.includes('--video');
+  if (reel && !higgsfield.isConfigured()) throw new Error('--video needs HF_API_KEY_ID and HF_API_KEY_SECRET in .env.');
+
+  const episode = await writeEpisode(state, bible, { trend, reel });
   console.log('\n--- EPISODE ---');
   console.log('Title:  ', episode.title);
   console.log('Scene:  ', episode.scene);
+  if (reel) console.log('Motion: ', episode.motion);
   console.log('Caption:', episode.caption);
   console.log('Tags:   ', episode.hashtags.map((h) => `#${h}`).join(' '));
 
-  const { jpeg, aspectRatio } = await drawPanel(episode.scene, bible, refs);
   fs.mkdirSync(paths.posts, { recursive: true });
-  const out = path.join(paths.posts, `dryrun-${Date.now()}.jpg`);
-  fs.writeFileSync(out, jpeg);
-  console.log(`\nSaved ${out} (${aspectRatio}, ${(jpeg.length / 1024).toFixed(0)} KB)`);
+  const stamp = Date.now();
+
+  if (reel) {
+    const { FRAME_NOTE } = await import('./decide.js');
+    const { jpeg } = await drawPanel(episode.scene, bible, refs, { aspectRatios: [video.aspectRatio], frameNote: FRAME_NOTE });
+    const framePath = path.join(paths.posts, `dryrun-${stamp}-frame.jpg`);
+    fs.writeFileSync(framePath, jpeg);
+    console.log(`\nSaved keyframe ${framePath}`);
+    console.log('Animating with Higgsfield (1-4 minutes)...');
+    const { videoUrl } = await higgsfield.animate(jpeg, buildMotionPrompt(episode.motion || 'They breathe and glance at each other. Camera locked off.'));
+    const mp4 = await higgsfield.download(videoUrl);
+    const out = path.join(paths.posts, `dryrun-${stamp}.mp4`);
+    fs.writeFileSync(out, mp4);
+    console.log(`Saved ${out} (${(mp4.length / 1024 / 1024).toFixed(1)} MB)`);
+  } else {
+    const { jpeg, aspectRatio } = await drawPanel(episode.scene, bible, refs);
+    const out = path.join(paths.posts, `dryrun-${stamp}.jpg`);
+    fs.writeFileSync(out, jpeg);
+    console.log(`\nSaved ${out} (${aspectRatio}, ${(jpeg.length / 1024).toFixed(0)} KB)`);
+  }
   console.log('Nothing was sent to Telegram and nothing was posted.');
 }
 
