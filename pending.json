@@ -1,3 +1,36 @@
 {
-  "status": "none"
+  "status": "awaiting",
+  "kind": "video",
+  "episodeNumber": 21,
+  "attempt": 1,
+  "episode": {
+    "title": "The Autumn Care Package",
+    "scene": "In the attic living room under warm late-afternoon sunlight, Ichigo stands proudly upright on her hind legs on the polished floorboards, front paws resting on the rim of a hollowed walnut half overflowing with fluffy sage moss, a single dried cranberry, and a giant golden pumpkin seed. Opposite her, Teddy crouches as a massive, shaggy sphere of apricot fur, head tilted down and dark bead eyes studying the lavish miniature hamper resting between his paws.",
+    "caption": "She spent three days assembling a curated seasonal comfort parcel, half of which she fully intends to reclaim before bedtime.",
+    "hashtags": [
+      "teddyandichigo",
+      "couplescomic",
+      "sliceoflifecomic",
+      "boobasket",
+      "autumnvibes"
+    ],
+    "arcNote": "Ichigo assembled an elaborate autumnal comfort basket for Teddy in a polished walnut shell.",
+    "arcUpdate": "",
+    "motion": "0-1.5s: Ichigo gives the walnut shell one final, decisive shove against Teddy's stubby front paws, whiskers twitching with expectant pride.\n1.5-3.5s: Teddy blinks, delicately lifts the oversized pumpkin seed from the bed of moss, and cleanly snaps it in half.\n3.5-5s: Ichigo instantly accepts the proffered half with a smug twitch of her nose, tucking it into her cheek as Teddy begins quietly nibbling his.\nCamera: Locked off. Sound: Soft scrape of walnut on wood, followed by a crisp seed snap.",
+    "newRunningGag": ""
+  },
+  "trend": {
+    "name": "Boo Basket Gifting Ritual",
+    "what": "A viral autumn trend on TikTok and Instagram where partners assemble cozy seasonal baskets packed with snacks, blankets, and fall comforts.",
+    "hamsterAngle": "Ichigo proudly presents Teddy with a polished walnut shell stuffed with a fluffy moss tuft, one roasted pumpkin seed, and an acorn cap.",
+    "hashtag": "boobasket"
+  },
+  "filename": "ep-0021-v1.jpg",
+  "frameFilename": "ep-0021-v1-frame.jpg",
+  "aspectRatio": "9:16",
+  "videoUrl": "https://d3u0tzju9qaucj.cloudfront.net/3404d6ea-7005-4320-9582-0c38c2ec28f8/06e39072-1141-4a9a-ba75-528084b155a8.mp4",
+  "videoRequestId": "5667db1d-ea7c-4e9c-914c-24619f36b04c",
+  "telegramMessageId": 140,
+  "lastUpdateId": 0,
+  "createdAt": "2026-10-04T20:01:04.472Z"
 }

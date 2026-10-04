@@ -1,3 +1,42 @@
 {
-  "date": ""
+  "date": "2026-10-04",
+  "episodeNumber": 21,
+  "options": [
+    {
+      "name": "Boo Basket Gifting Ritual",
+      "what": "A viral autumn trend on TikTok and Instagram where partners assemble cozy seasonal baskets packed with snacks, blankets, and fall comforts.",
+      "hamsterAngle": "Ichigo proudly presents Teddy with a polished walnut shell stuffed with a fluffy moss tuft, one roasted pumpkin seed, and an acorn cap.",
+      "hashtag": "boobasket"
+    },
+    {
+      "name": "October 1st Girlfriend Tributes",
+      "what": "An annual early-October trend where people post soft, cinematic tributes appreciating their girlfriends against cozy autumnal backdrops.",
+      "hamsterAngle": "Ichigo poses dramatically bathed in golden late-afternoon window light, shooting pointed sideways glances at Teddy while he calmly cracks a sunflower seed.",
+      "hashtag": "october1st"
+    },
+    {
+      "name": "The October Theory Reset",
+      "what": "A viral lifestyle trend framing October as the true fresh start of the year for aggressive nesting, reorganization, and cozy home revamps.",
+      "hamsterAngle": "Ichigo oversees a towering mountain of freshly gathered paper shreds and dried botanicals to rebrand their nest, while Teddy remains placidly rooted to his sofa spot.",
+      "hashtag": "octobertheory"
+    },
+    {
+      "name": "Premature Sweater Weather Bundling",
+      "what": "The relatable seasonal trope of diving into excessively cozy knit layers the moment temperatures drop even by one degree.",
+      "hamsterAngle": "Ichigo is completely swallowed inside a repurposed woollen fingertip glove pulled up to her ears, while Teddy stares at the tiny knitted lump with quiet intrigue.",
+      "hashtag": "sweaterweather"
+    },
+    {
+      "name": "The Crisp Crunchy Leaf Hunt",
+      "what": "A wholesome autumn trend focusing on the sensory joy and obsession of finding the absolute crispest dried fall leaves to step on.",
+      "hamsterAngle": "Ichigo stands victorious atop a gigantic, perfectly crinkled dried maple leaf she dragged through the attic sill, daring Teddy to question its purpose.",
+      "hashtag": "crunchyleaves"
+    }
+  ],
+  "bestFit": 0,
+  "bioIdea": "Two tiny hamsters navigating big fall feelings in a cosy attic flat. Painted love and dry truths.",
+  "messageId": 138,
+  "lastUpdateId": 0,
+  "picked": 0,
+  "pickedBy": "auto"
 }
