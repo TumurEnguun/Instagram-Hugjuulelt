@@ -73,6 +73,7 @@ export function stashUpdates(results) {
           id: `rx${u.update_id}`,
           fileId: vid.file_id,
           fileSize: vid.file_size ?? 0,
+          durationSec: vid.duration ?? 0,
           note: m.caption ?? '',
           status: 'new',
           attempt: 0,

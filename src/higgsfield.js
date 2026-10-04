@@ -92,7 +92,7 @@ export async function animate(jpeg, prompt, { timeoutMinutes = 15, duration = vi
  * choreography, our images decide who is in it. Output length matches the
  * source clip (4-30 s). Images: up to 8, keyframe first, then character refs.
  */
-export async function motionTransfer(sourceMp4, images, prompt, { resolution = '1080p', timeoutMinutes = 20, onSubmitted } = {}) {
+export async function motionTransfer(sourceMp4, images, prompt, { resolution = '480p', timeoutMinutes = 20, onSubmitted } = {}) {
   const videoUrl = await uploadFile(sourceMp4, 'video/mp4');
   const imageUrls = [];
   for (const img of images.slice(0, 8)) imageUrls.push(await uploadFile(img.data, img.mimeType));
@@ -137,6 +137,16 @@ export async function waitForJob(job, timeoutMinutes = 20) {
     }
   }
   throw new Error(`Higgsfield did not finish within ${timeoutMinutes} minutes (job ${requestId}).`);
+}
+
+/**
+ * Free credential check for doctor: asking for an upload slot needs a valid key
+ * but generates nothing and costs nothing.
+ */
+export async function checkAuth() {
+  const slot = await api('/files/generate-upload-url', { method: 'POST', body: { content_type: 'image/jpeg' } });
+  if (!slot.upload_url) throw new Error('key accepted but no upload slot returned');
+  return true;
 }
 
 /** Download the finished clip, for the Telegram preview and dry runs. */

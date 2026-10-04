@@ -246,6 +246,19 @@ async function checkFacebook() {
   }
 }
 
+async function checkHiggsfield() {
+  const hf = await import('./higgsfield.js');
+  if (!hf.isConfigured()) {
+    return skip('Higgsfield', 'not set up, photos only (HF_API_KEY_ID / HF_API_KEY_SECRET)');
+  }
+  try {
+    await hf.checkAuth();
+    ok('Higgsfield', 'key works (Reels and remixes enabled; free check, nothing generated)');
+  } catch (err) {
+    bad('Higgsfield', /401|403/.test(err.message) ? 'key rejected: check HF_API_KEY_ID and HF_API_KEY_SECRET (split the key at the colon)' : err.message.slice(0, 140));
+  }
+}
+
 async function main() {
   console.log('\nChecking your credentials. No secret values are printed.\n');
 
@@ -254,6 +267,7 @@ async function main() {
   await checkTelegram();
   await checkInstagram();
   await checkFacebook();
+  await checkHiggsfield();
 
   const failed = results.filter((r) => r.state === 'bad').length;
   const absent = results.filter((r) => r.state === 'missing').length;

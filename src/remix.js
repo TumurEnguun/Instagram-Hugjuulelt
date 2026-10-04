@@ -29,6 +29,16 @@ import {
 } from './telegram.js';
 
 const MAX_FRAME_ATTEMPTS = 4;
+
+/**
+ * Motion transfer is billed per second of output, which matches the source
+ * clip (capped at 30 s). Approximate Higgsfield rates for Genjutsu: about
+ * $2.00 / $5.20 / $7.20 per 15 s at 480p / 720p / 1080p. The painted style
+ * hides softness well, so 480p is the default; 720p is offered for keepers.
+ */
+const RATE_PER_SEC = { '480p': 2.0 / 15, '720p': 5.2 / 15, '1080p': 7.2 / 15 };
+const billedSeconds = (job) => Math.min(30, Math.max(4, job.durationSec || 30));
+const estimate = (job, res) => `$${(billedSeconds(job) * RATE_PER_SEC[res]).toFixed(2)}`;
 const TELEGRAM_BOT_DOWNLOAD_LIMIT = 20 * 1024 * 1024;
 
 let client;
@@ -126,12 +136,15 @@ function frameCaption(job) {
     '',
     cast + swaps,
     '',
-    'This is the first frame. Make the video?',
+    `This is the first frame. Make the video? Billed for ${billedSeconds(job)} s of video; trim the clip to the core moment before sending to pay less.`,
   ].join('\n');
 }
 
 const buttons = (job) => [
-  [{ text: '🎬 Make it', callback_data: `RMXGO:${job.id}:${job.attempt}` }],
+  [
+    { text: `🎬 Make it 480p (~${estimate(job, '480p')})`, callback_data: `RMXGO:${job.id}:${job.attempt}:480p` },
+    { text: `720p (~${estimate(job, '720p')})`, callback_data: `RMXGO:${job.id}:${job.attempt}:720p` },
+  ],
   [
     { text: '🎨 Repaint frame', callback_data: `RMXPAINT:${job.id}:${job.attempt}` },
     { text: '✖ Cancel', callback_data: `RMXX:${job.id}:${job.attempt}` },
@@ -179,7 +192,7 @@ async function animateJob(r, job) {
     console.log(`Resuming Higgsfield job ${job.requestId}`);
     result = await higgsfield.waitForJob({ request_id: job.requestId });
   } else {
-    await sendMessage(`Making the ${escapeHtml(job.analysis.trendName)} video. This takes a few minutes...`);
+    await sendMessage(`Making the ${escapeHtml(job.analysis.trendName)} video at ${job.resolution} (about ${estimate(job, job.resolution)}). This takes a few minutes...`);
     const source = await downloadFile(job.fileId);
     const frame = fs.readFileSync(framePath(job));
     const images = [
@@ -187,6 +200,7 @@ async function animateJob(r, job) {
       ...readCharacterRefs().map((c) => ({ data: Buffer.from(c.data, 'base64'), mimeType: c.mimeType })),
     ];
     result = await higgsfield.motionTransfer(source, images, job.analysis.transferPrompt + STYLE_LOCK, {
+      resolution: job.resolution ?? '480p',
       onSubmitted: (id) => {
         job.requestId = id;
         save(r);
@@ -208,7 +222,7 @@ async function animateJob(r, job) {
 }
 
 async function handlePress(r, p) {
-  const [action, id, attemptStr] = p.data.split(':');
+  const [action, id, attemptStr, res] = p.data.split(':');
   const job = findJob(r, id);
   if (!job || job.attempt !== Number(attemptStr) || job.status !== 'frame_sent') {
     await ackButton(p.callbackId, 'That button is out of date.');
@@ -236,6 +250,7 @@ async function handlePress(r, p) {
       return;
     }
     await ackButton(p.callbackId, 'Making the video...');
+    job.resolution = RATE_PER_SEC[res] ? res : '480p';
     job.status = 'animating';
     save(r);
     await animateJob(r, job);
@@ -267,7 +282,12 @@ async function pass() {
         delete job.requestId;
         save(r);
       }
-      await sendMessage(`The remix hit a problem, nothing was charged for a failed job. You can tap Make it again.\n<code>${escapeHtml(err.message)}</code>`);
+      const broke = /balance|insufficient|credit|402/i.test(err.message);
+      await sendMessage(
+        broke
+          ? 'Not enough Higgsfield balance for that one. Nothing was charged. Top up, or tap the 480p button / send a shorter clip.'
+          : `The remix hit a problem, nothing was charged for a failed job. You can tap Make it again.\n<code>${escapeHtml(err.message)}</code>`
+      );
     }
   }
 

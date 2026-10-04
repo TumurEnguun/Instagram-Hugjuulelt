@@ -1,6 +1,48 @@
 {
-  "seenUpdateId": 0,
-  "jobs": [],
+  "seenUpdateId": 558643665,
+  "jobs": [
+    {
+      "id": "rx558643664",
+      "fileId": "BAACAgEAAxkBAANuasHNUpSnot8sY5QLxtn7HB_x540AAkIIAALOmxFG3CN9SAccoUo9BA",
+      "fileSize": 6134780,
+      "note": "",
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-04T03:52:04.786Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Ghost SWAT Formation Chant",
+        "beats": "0:00-0:06: Teddy stands before ranks of identical Ichigos as the camera tracks out. 0:07-0:14: Teddy turns and walks up through the stepped crowd, taking the central spot. 0:15-0:27: The crowd of identical Ichigos rhythmically bows and rises in unison to the heavy beat while Teddy remains calm in the middle.",
+        "casting": [
+          {
+            "original": "Ghost character in the center",
+            "becomes": "Teddy"
+          },
+          {
+            "original": "Crowd of SWAT soldiers",
+            "becomes": "identical Ichigos"
+          }
+        ],
+        "keyframeScene": "Storybook gouache painting. Vertical framing. A massive stepped grandstand inside a cosy attic loft filled with rows of identical neat white dwarf hamsters (Ichigos). In the foreground, viewed from behind, large shaggy apricot hamster Teddy stands calmly looking up at the tiered formation. Soft warm overhead attic lighting casting gentle shadows. Solid glossy black bead eyes.",
+        "transferPrompt": "Motion-transfer instructions: Ghost, the tactical character walking up through the formation and turning to face front, becomes Teddy, the large long-haired Syrian hamster. The entire surrounding crowd of SWAT soldiers in tiered rows becomes identical Ichigos (neat little white dwarf hamsters). All military gear, tactical vests, helmets, goggles, smoke, and skull masks are swapped for bare hamster fur in painterly gouache style. The crowd of Ichigos replicates the rhythmic, synchronized bowing and rising motions to the heavy chants exactly on beat. Teddy maintains his calm, deadpan stance in the center, subtly nodding to the rhythm while the camera pulls back smoothly.",
+        "caption": "Ichigo organized a very dramatic morning routine rehearsal, but Teddy is mostly just waiting for breakfast.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamsterart",
+          "cozyvibes",
+          "callofdutyghost",
+          "ghostedit"
+        ],
+        "song": "GENER8ION, Yung Lean - STORM II",
+        "swaps": [
+          "SWAT tactical gear and helmets -> bare dwarf hamster fur",
+          "Skull mask and headset -> natural Syrian hamster face and ears",
+          "Dark military vault -> warm cosy attic loft staging"
+        ]
+      },
+      "durationSec": 32
+    }
+  ],
   "presses": [],
   "notices": []
 }
