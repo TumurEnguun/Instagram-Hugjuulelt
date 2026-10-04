@@ -73,6 +73,35 @@ export async function sendProposal(jpegBuffer, episode, episodeNumber, attempt) 
 }
 
 /**
+ * Send today's trend options as buttons. Tapping one decides what tomorrow's
+ * writer builds the episode around; "Just the story" skips trends for the day.
+ */
+export async function sendTrendOptions(scout, episodeNumber, waitMinutes) {
+  const lines = [`<b>Trends for episode ${episodeNumber}</b>. Pick one for the hamsters:`, ''];
+  scout.options.forEach((o, i) => {
+    const best = i === scout.bestFit ? '  ⭐' : '';
+    lines.push(`<b>${i + 1}. ${escapeHtml(o.name)}</b>${best}`);
+    lines.push(escapeHtml(o.what));
+    lines.push(`<i>Hamsters: ${escapeHtml(o.hamsterAngle)}</i>`);
+    lines.push('');
+  });
+  const fallback = scout.bestFit === null ? 'just the story' : `#${scout.bestFit + 1}`;
+  lines.push(`No tap in ${waitMinutes} min and I go with ${fallback}.`);
+  if (scout.bioIdea) lines.push('', `Bio idea (paste it in Instagram yourself): ${escapeHtml(scout.bioIdea)}`);
+
+  const numbers = scout.options.map((_, i) => ({ text: String(i + 1), callback_data: `TREND:${episodeNumber}:${i}` }));
+  return call('sendMessage', {
+    chat_id: need('TELEGRAM_CHAT_ID'),
+    text: lines.join('\n').slice(0, 4096),
+    parse_mode: 'HTML',
+    disable_web_page_preview: true,
+    reply_markup: {
+      inline_keyboard: [numbers, [{ text: 'No trend, just the story', callback_data: `STORY:${episodeNumber}:0` }]],
+    },
+  });
+}
+
+/**
  * Look for a button press newer than `offset`.
  * Returns { action, updateId, callbackId } or null if nothing new.
  * Always takes the LATEST press, so changing your mind works.
@@ -106,6 +135,8 @@ export async function pollDecision(offset = 0, { longPollSeconds = 0 } = {}) {
     // Callers treat that as "cannot verify" rather than as a mismatch.
     episodeNumber: episodeNumber === undefined ? undefined : Number(episodeNumber),
     attempt: attempt === undefined ? undefined : Number(attempt),
+    // Trend buttons carry "TREND:<episode>:<option index>".
+    trendIndex: action === 'TREND' ? Number(attempt) : undefined,
     updateId: latest.update_id,
     callbackId: latest.callback_query.id,
     // Highest id seen, so we acknowledge everything we just read.
@@ -123,6 +154,11 @@ export async function pollDecision(offset = 0, { longPollSeconds = 0 } = {}) {
  */
 export function pressMatchesPending(decision, pending) {
   if (decision.episodeNumber === undefined) return true;
+  // Trend picks belong to the episode, not to one attempt: tapping a different
+  // trend after the proposal arrived means "rewrite it with this one".
+  if (decision.action === 'TREND' || decision.action === 'STORY') {
+    return decision.episodeNumber === pending.episodeNumber;
+  }
   return decision.episodeNumber === pending.episodeNumber && decision.attempt === pending.attempt;
 }
 

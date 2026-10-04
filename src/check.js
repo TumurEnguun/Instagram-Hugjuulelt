@@ -88,7 +88,7 @@ async function handleOne(pending, minutes) {
   // Mirror it locally too, so a run that never reaches Telegram still knows.
   writePending({ ...pending, lastUpdateId: decision.maxUpdateId });
 
-  const result = await applyDecision(decision.action, { ...pending, lastUpdateId: decision.maxUpdateId }, decision.callbackId);
+  const result = await applyDecision(decision.action, { ...pending, lastUpdateId: decision.maxUpdateId }, decision.callbackId, decision);
   console.log(`Result: ${result}`);
   return result;
 }

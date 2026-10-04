@@ -2,6 +2,7 @@
  * Reads and writes the two pieces of persistent state:
  *   story-state.json  the ongoing series (episode log, arc, running gags)
  *   pending.json      the single post currently awaiting Enguun's approval
+ *   trends.json       today's trend options and the one picked
  */
 import fs from 'node:fs';
 import { paths } from './config.js';
@@ -35,6 +36,10 @@ export const writeState = (s) => writeJson(paths.state, s);
 export const readPending = () => readJson(paths.pending, EMPTY_PENDING);
 export const writePending = (p) => writeJson(paths.pending, p);
 export const clearPending = () => writeJson(paths.pending, EMPTY_PENDING);
+
+// Today's trend options and which one was picked. See trends.js and propose.js.
+export const readTrends = () => readJson(paths.trends, { date: '' });
+export const writeTrends = (t) => writeJson(paths.trends, t);
 
 export function readBible() {
   if (!fs.existsSync(paths.bible)) {

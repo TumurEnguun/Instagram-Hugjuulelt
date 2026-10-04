@@ -24,6 +24,7 @@ export const paths = {
   bible: path.join(ROOT, 'bible.md'),
   state: path.join(ROOT, 'story-state.json'),
   pending: path.join(ROOT, 'pending.json'),
+  trends: path.join(ROOT, 'trends.json'),
 };
 
 export const models = {

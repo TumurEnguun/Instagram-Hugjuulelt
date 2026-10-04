@@ -29,6 +29,26 @@ every 15 min until 22:45  check.yml
        renews the 60 day Instagram token
 ```
 
+## Trends
+
+Every morning, before the episode is written, a trend scout (`src/trends.js`)
+uses Gemini with Google Search to find what is trending this week and sends
+you 5 options on Telegram, each with a hamster angle and a bio idea.
+
+- Tap a number and today's episode is built around that trend.
+- Tap **No trend, just the story** for a normal episode.
+- No tap in 30 minutes: it goes with the scout's best fit (marked with a star),
+  or a normal episode if nothing fits.
+- Tap a different number later, even after the proposal arrived, and the
+  episode is rewritten with that trend.
+
+The scout never posts and never blocks the day: if it fails, you get a normal
+story episode. It skips tragedies, politics and anything built on a real
+person, brand or copyrighted character. Instagram's API cannot change the bio,
+so bio ideas are for you to paste in yourself.
+
+`trends.json` records today's options and which one was picked.
+
 ## Keeping the hamsters consistent
 
 This is the part that makes or breaks the account, and it rests on three files.
@@ -54,6 +74,8 @@ them mid-series is what makes a feed look inconsistent.
 npm run doctor         # check every credential, without sending anything
 npm run bootstrap      # one time: design and lock the two hamsters
 npm run propose:dry    # generate locally, save to posts/, send nothing
+npm run trends         # print today's trend options, send nothing
+npm run propose:dry -- --trend   # dry run built around the best trend
 npm run propose        # generate and ask on Telegram
 npm run check          # act on the latest button press
 npm run refresh-token  # renew the Instagram token

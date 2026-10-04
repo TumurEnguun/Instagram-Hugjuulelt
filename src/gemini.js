@@ -91,8 +91,25 @@ const BEATS = [
 ];
 
 /** Ask the writer model for the next episode, given everything that came before. */
-export async function writeEpisode(state, bible, { avoidScene = '' } = {}) {
+export async function writeEpisode(state, bible, { avoidScene = '', trend = null } = {}) {
   const beat = BEATS[state.episodeCount % BEATS.length];
+
+  // A picked trend replaces the rotating situation for the day. The couple
+  // lens stays: the trend is the costume, the relatable moment is still the
+  // point, otherwise trend posts read as generic meme accounts.
+  const situation = trend
+    ? `TODAY'S TREND, picked by the account owner: ${trend.name}
+What it is: ${trend.what}
+A possible hamster angle: ${trend.hamsterAngle}
+
+Build the episode around this trend so anyone who knows it gets the reference
+instantly from the picture plus caption. You may use the suggested angle or a
+better one. It must still be a small, recognisable couple moment between these
+two, in their world and art style. Never copy a copyrighted character, real
+person or brand; no text in the image, so the caption carries any catchphrase.${
+        trend.hashtag ? `\nOne of the 2 episode-specific hashtags should be: ${trend.hashtag}` : ''
+      }`
+    : beat;
 
   // Alternate who is the cause and who reacts. BEATS.length is even, so the
   // two rotations would otherwise stay in lockstep and pair each situation
@@ -137,7 +154,7 @@ ${recent}
 Write episode ${state.episodeCount + 1}.
 
 THIS EPISODE'S SITUATION:
-${beat}
+${situation}
 
 WHO DRIVES IT THIS TIME: ${driver}
 

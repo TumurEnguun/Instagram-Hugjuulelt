@@ -17,7 +17,8 @@
     "listen": "node src/listen.js",
     "fb-setup": "node src/fb-setup.js",
     "insights": "node src/insights.js",
-    "probe": "node src/probe.js"
+    "probe": "node src/probe.js",
+    "trends": "node src/trends.js"
   },
   "dependencies": {
     "@google/genai": "^1.40.0",

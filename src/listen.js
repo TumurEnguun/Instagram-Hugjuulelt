@@ -32,7 +32,7 @@ const noPush = process.argv.includes('--no-push');
 function persist(label) {
   if (noPush) return;
   try {
-    execFileSync('git', ['add', '-A', 'posts', 'pending.json', 'story-state.json'], { stdio: 'pipe' });
+    execFileSync('git', ['add', '-A', 'posts', 'pending.json', 'story-state.json', 'trends.json'], { stdio: 'pipe' });
     const staged = execFileSync('git', ['diff', '--staged', '--name-only'], { encoding: 'utf8' }).trim();
     if (!staged) return;
     execFileSync('git', ['commit', '-m', label], { stdio: 'pipe' });
@@ -106,7 +106,8 @@ async function main() {
     const result = await applyDecision(
       decision.action,
       { ...pending, lastUpdateId: decision.maxUpdateId },
-      decision.callbackId
+      decision.callbackId,
+      decision
     );
     console.log(`   ${result}`);
 

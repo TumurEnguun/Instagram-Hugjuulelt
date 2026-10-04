@@ -9,8 +9,79 @@ import path from 'node:path';
 import { paths } from './config.js';
 import { propose } from './decide.js';
 import { writeEpisode, drawPanel } from './gemini.js';
-import { readState, readBible, readCharacterRefs, readPending, runOncePerDay, SKIPPED } from './store.js';
-import { sendMessage } from './telegram.js';
+import { readState, readBible, readCharacterRefs, readPending, runOncePerDay, SKIPPED, readTrends, writeTrends, today } from './store.js';
+import { sendMessage, sendTrendOptions, drainUpdates, waitForDecision, confirmUpdates, ackButton, escapeHtml } from './telegram.js';
+import { scoutTrends } from './trends.js';
+
+/** How long to wait for a trend tap before auto-picking. */
+const TREND_WAIT_MINUTES = Number(process.env.TREND_WAIT_MINUTES ?? 30);
+
+/**
+ * Scout today's trends, send them as buttons, and wait for Enguun's pick.
+ *
+ * Returns the trend object to build the episode around, or null for a normal
+ * story episode. Never throws: a broken scout must not cost the day's post, it
+ * just means a story episode like before trends existed.
+ *
+ * If an earlier cron slot already sent today's options (and died before
+ * proposing), they are reused instead of sending a second list.
+ */
+async function pickTrend() {
+  const episodeNumber = readState().episodeCount + 1;
+  let t = readTrends();
+
+  try {
+    if (t.date !== today() || t.episodeNumber !== episodeNumber || !t.options?.length) {
+      const scout = await scoutTrends(readState(), readBible());
+      // Flush stale presses (yesterday's buttons) so they cannot count as today's pick.
+      const baseline = await drainUpdates();
+      const msg = await sendTrendOptions(scout, episodeNumber, TREND_WAIT_MINUTES);
+      t = { date: today(), episodeNumber, ...scout, messageId: msg.message_id, lastUpdateId: baseline, picked: undefined };
+      writeTrends(t);
+    } else if (t.picked !== undefined) {
+      // Already decided in an earlier slot.
+      return t.picked === null ? null : t.options[t.picked];
+    }
+  } catch (err) {
+    console.warn(`Trend scout failed (${err.message}). Going with a normal story episode.`);
+    return null;
+  }
+
+  // Wait for a TREND/STORY tap on today's list. Anything else is a stale tap
+  // on an old message: consume it and keep waiting.
+  const deadline = Date.now() + TREND_WAIT_MINUTES * 60_000;
+  let offset = t.lastUpdateId ?? 0;
+  while (Date.now() < deadline) {
+    const minutesLeft = (deadline - Date.now()) / 60_000;
+    const d = await waitForDecision(offset, minutesLeft);
+    if (!d) break;
+    await confirmUpdates(d.maxUpdateId);
+    offset = d.maxUpdateId;
+
+    const forToday = d.episodeNumber === episodeNumber && (d.action === 'TREND' || d.action === 'STORY');
+    if (!forToday) {
+      await ackButton(d.callbackId, 'That is an old button. Pick from today\'s trend list.');
+      continue;
+    }
+
+    const picked = d.action === 'TREND' ? d.trendIndex : null;
+    const trend = picked === null ? null : t.options[picked] ?? null;
+    await ackButton(d.callbackId, trend ? `Going with: ${trend.name}` : 'Just the story today.');
+    writeTrends({ ...t, picked: trend ? picked : null, pickedBy: 'you', lastUpdateId: offset });
+    return trend;
+  }
+
+  // No tap in time: the scout's own pick, which may be "nothing fits today".
+  const auto = t.bestFit ?? null;
+  writeTrends({ ...t, picked: auto, pickedBy: 'auto', lastUpdateId: offset });
+  const trend = auto === null ? null : t.options[auto];
+  await sendMessage(
+    trend
+      ? `No pick, so I went with <b>${escapeHtml(trend.name)}</b>. Tap another number on the list any time to rewrite.`
+      : 'No pick and nothing fit today, so it is a normal story episode. Tap a number on the list to rewrite with a trend.'
+  );
+  return trend;
+}
 
 const dryRun = process.argv.includes('--dry-run');
 
@@ -20,7 +91,15 @@ async function dry() {
   const refs = readCharacterRefs();
   if (refs.length === 0) throw new Error('No character references. Run `npm run bootstrap` first.');
 
-  const episode = await writeEpisode(state, bible);
+  // --trend: scout trends and build the dry-run episode around the best fit.
+  let trend = null;
+  if (process.argv.includes('--trend')) {
+    const scout = await scoutTrends(state, bible);
+    trend = scout.bestFit === null ? null : scout.options[scout.bestFit];
+    console.log(`Trend: ${trend ? trend.name : '(none fits today)'}`);
+  }
+
+  const episode = await writeEpisode(state, bible, { trend });
   console.log('\n--- EPISODE ---');
   console.log('Title:  ', episode.title);
   console.log('Scene:  ', episode.scene);
@@ -71,7 +150,10 @@ async function main() {
 
   // The claim is written only after the proposal is actually sent, so a slot
   // that dies mid-generation leaves the next slot free to try again.
-  const result = await runOncePerDay('lastProposedOn', () => propose({ mode: 'new' }));
+  const result = await runOncePerDay('lastProposedOn', async () => {
+    const trend = await pickTrend();
+    return propose({ mode: 'new', trend });
+  });
   if (result === SKIPPED) console.log('Already proposed today. Nothing to do.');
 }
 

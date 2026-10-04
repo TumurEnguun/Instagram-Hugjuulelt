@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { paths } from './config.js';
 import { writeEpisode, drawPanel } from './gemini.js';
-import { readState, writeState, readBible, readCharacterRefs, writePending, clearPending, recordEpisode } from './store.js';
+import { readState, writeState, readBible, readCharacterRefs, writePending, clearPending, recordEpisode, readTrends, writeTrends } from './store.js';
 import { sendProposal, sendMessage, ackButton, drainUpdates, escapeHtml } from './telegram.js';
 import { publishPhoto } from './instagram.js';
 import * as facebook from './facebook.js';
@@ -17,8 +17,10 @@ import { publicUrlFor, waitUntilReachable } from './host.js';
 /**
  * Generate a fresh proposal and put it in front of Enguun.
  * `mode` is 'new' (write a new episode) or 'redraw' (keep the story, new art).
+ * `trend` is a trend option to build the episode around. Leave it undefined to
+ * keep whatever the previous attempt used; pass null for no trend.
  */
-export async function propose({ mode = 'new', previous = null } = {}) {
+export async function propose({ mode = 'new', previous = null, trend } = {}) {
   const state = readState();
   const bible = readBible();
   const refs = readCharacterRefs();
@@ -30,10 +32,17 @@ export async function propose({ mode = 'new', previous = null } = {}) {
   const episodeNumber = state.episodeCount + 1;
   const attempt = (previous?.attempt ?? 0) + 1;
 
+  const activeTrend = trend !== undefined ? trend : previous?.trend ?? null;
+
   const episode =
     mode === 'redraw' && previous
       ? previous.episode
-      : await writeEpisode(state, bible, { avoidScene: previous?.episode?.scene ?? '' });
+      : await writeEpisode(state, bible, {
+          // Only avoid the old scene when it was rejected under the same trend;
+          // switching trend already guarantees something different.
+          avoidScene: trend === undefined ? previous?.episode?.scene ?? '' : '',
+          trend: activeTrend,
+        });
 
   console.log(`Drawing episode ${episodeNumber} (attempt ${attempt}): ${episode.title}`);
   const { jpeg, aspectRatio } = await drawPanel(episode.scene, bible, refs);
@@ -59,6 +68,7 @@ export async function propose({ mode = 'new', previous = null } = {}) {
     episodeNumber,
     attempt,
     episode,
+    trend: activeTrend,
     filename,
     aspectRatio,
     telegramMessageId: sent.message_id,
@@ -81,12 +91,14 @@ function buildCaption(episode) {
  * Act on a button press.
  * Returns a short string describing what happened, for the workflow log.
  */
-export async function applyDecision(action, pending, callbackId = null) {
+export async function applyDecision(action, pending, callbackId = null, decision = {}) {
   const toast = {
     OK: 'Publishing to Instagram...',
     AGAIN: 'Redrawing...',
     REWRITE: 'Writing a new episode...',
     SKIP: 'Skipped.',
+    TREND: 'Rewriting with that trend...',
+    STORY: 'Rewriting without a trend...',
   }[action];
   if (callbackId) await ackButton(callbackId, toast ?? 'Working...');
 
@@ -140,6 +152,25 @@ export async function applyDecision(action, pending, callbackId = null) {
 
     case 'REWRITE':
       await propose({ mode: 'new', previous: pending });
+      return 'rewritten';
+
+    // A trend tapped after the proposal already arrived: same episode number,
+    // rewritten around the newly picked trend (or none, for STORY).
+    case 'TREND': {
+      const trends = readTrends();
+      const picked = trends.options?.[decision.trendIndex];
+      if (!picked) {
+        await sendMessage('That trend list is out of date. Nothing changed.');
+        return 'ignored';
+      }
+      writeTrends({ ...trends, picked: decision.trendIndex, pickedBy: 'you' });
+      await propose({ mode: 'new', previous: pending, trend: picked });
+      return 'rewritten';
+    }
+
+    case 'STORY':
+      writeTrends({ ...readTrends(), picked: null, pickedBy: 'you' });
+      await propose({ mode: 'new', previous: pending, trend: null });
       return 'rewritten';
 
     case 'SKIP':
