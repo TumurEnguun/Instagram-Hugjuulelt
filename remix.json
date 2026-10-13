@@ -1,5 +1,5 @@
 {
-  "seenUpdateId": 558643665,
+  "seenUpdateId": 558643681,
   "jobs": [
     {
       "id": "rx558643664",
@@ -41,6 +41,48 @@
         ]
       },
       "durationSec": 32
+    },
+    {
+      "id": "rx558643681",
+      "fileId": "BAACAgEAAxkBAAOfas3B7BAFak_6ej6IktU7PL8-3QIAAp4KAAK4lnBGYCIttVzA3_I9BA",
+      "fileSize": 1682707,
+      "durationSec": 13,
+      "note": "",
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-13T12:22:59.123Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Outdoor crew bounce dance",
+        "beats": "0:00-0:03 Lead locks into rhythmic footwork while crew bounces in background. 0:04-0:07 Lead executes wide arm swings and side steps. 0:08-0:12 Lead hops, glides laterally, and hits sharp poses in sync with the beat.",
+        "casting": [
+          {
+            "original": "Lead dancer in center",
+            "becomes": "Teddy"
+          },
+          {
+            "original": "Background hype dancers",
+            "becomes": "identical Ichigos"
+          }
+        ],
+        "keyframeScene": "Teddy stands centered on attic floorboards in mid-bounce, flanked by four tiny identical Ichigos hyping behind him. Sunbeams stream from a round attic window onto stacked books and potted plants in soft gouache textures.",
+        "transferPrompt": "Transfer dance motions accurately. The center lead dancer becomes Teddy, a large fluffy apricot Syrian hamster with glossy black bead eyes. The surrounding backup dancers become identical Ichigos, small silvery dwarf hamsters. Maintain exact footwork, bounce timing, and camera framing. Replace human clothes with bare fur, and the concrete plaza with an attic floor.",
+        "caption": "Teddy insists the footwork is second nature, provided the Ichigos keep up the hype.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamstercomic",
+          "cosyart",
+          "dancetrend",
+          "hiphopdance"
+        ],
+        "reasonIfNot": "",
+        "song": "",
+        "swaps": [
+          "Streetwear and sneakers -> bare fur and paws",
+          "Concrete plaza -> attic floorboards",
+          "Background monument -> stacked antique books"
+        ]
+      }
     }
   ],
   "presses": [],
