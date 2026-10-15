@@ -1,5 +1,5 @@
 {
-  "seenUpdateId": 558643681,
+  "seenUpdateId": 558643682,
   "jobs": [
     {
       "id": "rx558643664",
@@ -81,6 +81,45 @@
           "Streetwear and sneakers -> bare fur and paws",
           "Concrete plaza -> attic floorboards",
           "Background monument -> stacked antique books"
+        ]
+      }
+    },
+    {
+      "id": "rx558643682",
+      "fileId": "BAACAgEAAxkBAAOjatAwWWber_LLP7610fz5V1YElzMAAosIAALcdoBGgwRD0Gh_Lh09BA",
+      "fileSize": 3216820,
+      "durationSec": 18,
+      "note": "",
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-15T02:34:18.786Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Uno Card Car Reveal",
+        "beats": "Teddy walks into frame in a cosy attic workshop. He flashes two colorful leaves across the lens. When lowered, an orange-and-black toy racer is revealed behind him. He smiles, gestures toward it, and climbs inside.",
+        "casting": [
+          {
+            "original": "Sung Kang",
+            "becomes": "Teddy"
+          }
+        ],
+        "keyframeScene": "Vertical storybook illustration. Teddy, a large shaggy apricot Syrian hamster with glossy black bead eyes, steps into the lower-right foreground. Behind him, warm lamplight illuminates an empty plank floor flanked by wooden attic pillars.",
+        "transferPrompt": "The man entering frame becomes Teddy with bare apricot fur. Teddy steps close to the lens and holds up two smooth, colorful pressed leaves instead of Uno cards. When swiped away, reveal a miniature orange-and-black wooden toy racecar parked in the attic bay. Teddy smirks, gestures backward with a stubby paw, turns, walks to the toy vehicle, and climbs in. Retain identical wide-angle perspective, smooth camera motion, and timing.",
+        "caption": "Teddy insists the attic racer handles like a dream, though Ichigo remains entirely unconvinced.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamsterart",
+          "cozyart",
+          "tokyodrift",
+          "carreveal"
+        ],
+        "reasonIfNot": "",
+        "song": "Tokyo Drift (Fast & Furious) - Teriyaki Boyz",
+        "swaps": [
+          "Sung Kang's clothes -> bare fur",
+          "Uno cards -> blue and yellow painted autumn leaves",
+          "Mazda RX-7 sports car -> hand-carved orange and black toy roadster",
+          "concrete parking garage -> rustic attic workshop"
         ]
       }
     }
