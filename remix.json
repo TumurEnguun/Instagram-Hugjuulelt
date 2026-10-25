@@ -243,7 +243,7 @@
       "fileSize": 4436925,
       "durationSec": 25,
       "note": "",
-      "status": "frame_sent",
+      "status": "cancelled",
       "attempt": 1,
       "receivedAt": "2026-10-25T19:12:05.577Z",
       "analysis": {
@@ -278,12 +278,6 @@
       }
     }
   ],
-  "presses": [
-    {
-      "data": "RMXX:rx558643692:1",
-      "callbackId": "7885338220287899022",
-      "updateId": 558643693
-    }
-  ],
+  "presses": [],
   "notices": []
 }
