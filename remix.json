@@ -1,5 +1,5 @@
 {
-  "seenUpdateId": 558643686,
+  "seenUpdateId": 558643692,
   "jobs": [
     {
       "id": "rx558643664",
@@ -236,8 +236,24 @@
           "highway and streetlights -> attic floorboards and miniature lanterns"
         ]
       }
+    },
+    {
+      "id": "rx558643692",
+      "fileId": "BAACAgEAAxkBAAO7at5UhettwZsf647-IzOKIv-oV-QAAuQJAALj0PBGuulTsTcef7o9BA",
+      "fileSize": 4436925,
+      "durationSec": 25,
+      "note": "",
+      "status": "new",
+      "attempt": 0,
+      "receivedAt": "2026-10-25T19:12:05.577Z"
     }
   ],
-  "presses": [],
+  "presses": [
+    {
+      "data": "RMXX:rx558643686:1",
+      "callbackId": "7885338219408420000",
+      "updateId": 558643691
+    }
+  ],
   "notices": []
 }
