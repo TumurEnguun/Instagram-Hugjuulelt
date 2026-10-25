@@ -1,5 +1,5 @@
 {
-  "seenUpdateId": 558643692,
+  "seenUpdateId": 558643693,
   "jobs": [
     {
       "id": "rx558643664",
@@ -278,6 +278,12 @@
       }
     }
   ],
-  "presses": [],
+  "presses": [
+    {
+      "data": "RMXX:rx558643692:1",
+      "callbackId": "7885338220287899022",
+      "updateId": 558643693
+    }
+  ],
   "notices": []
 }
