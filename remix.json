@@ -1,5 +1,5 @@
 {
-  "seenUpdateId": 558643682,
+  "seenUpdateId": 558643686,
   "jobs": [
     {
       "id": "rx558643664",
@@ -120,6 +120,120 @@
           "Uno cards -> blue and yellow painted autumn leaves",
           "Mazda RX-7 sports car -> hand-carved orange and black toy roadster",
           "concrete parking garage -> rustic attic workshop"
+        ]
+      }
+    },
+    {
+      "id": "rx558643684",
+      "fileId": "BAACAgEAAxkBAAOxat13b673THwsMN2KpyP5huGxLjoAArcHAAKkMPFGY4Ydnyig7FI9BA",
+      "fileSize": 2277965,
+      "durationSec": 13,
+      "note": "",
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-25T07:48:30.806Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Drink Hot Tea Stay Warm",
+        "beats": "A hamster stands outside at night holding a warm cup, talks earnestly to the viewer about keeping warm in the cold, and raises the cup in a cheerful toast.",
+        "casting": [
+          {
+            "original": "The man speaking with coffee cup",
+            "becomes": "Teddy"
+          }
+        ],
+        "keyframeScene": "Vertical framing. A painterly storybook illustration of Teddy, a large shaggy apricot Syrian hamster with glossy black bead eyes, standing on two hind paws on a cobbled miniature rooftop street at twilight. He holds a tiny steaming paper cup in his right paw, looking directly at the camera. Soft warm glow from a miniature streetlamp illuminates his round cheeks, with cozy dark rooftop silhouettes behind.",
+        "transferPrompt": "Motion-transfer the man speaking directly to the camera onto Teddy. The man becomes Teddy (large long-haired Syrian hamster, bare apricot fur, solid glossy bead eyes). The paper coffee cup becomes a tiny miniature steaming drink cup held in Teddy's stubby paw. Match the man's head tilts, facial movements translated to subtle hamster whisker twitches and mouth motion, and the final raising of the cup in a warm toast to the camera. Maintain identical framing, stationary eye-level camera, and timing.",
+        "caption": "Teddy just wanted to make sure everyone had a warm drink tonight.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamsterart",
+          "cozyvibes",
+          "staywarm",
+          "cozyautumn"
+        ],
+        "reasonIfNot": "",
+        "song": "",
+        "swaps": [
+          "Man's winter clothing and cap -> bare natural fur",
+          "Modern city sidewalk -> miniature cobblestone rooftop path"
+        ]
+      }
+    },
+    {
+      "id": "rx558643685",
+      "fileId": "BAACAgEAAxkBAAOyat19ke5_VXM6_NtmGyw-3xu_yloAAsYHAAKkMPFG7A2y-jgyDQg9BA",
+      "fileSize": 7628854,
+      "durationSec": 40,
+      "note": "",
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-25T07:48:30.806Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Pre-Feast Slap Dance",
+        "beats": "0:00 Teddy yells and psyches himself up at the table. 0:03 to 0:33 he launches into a frantic, rhythmic routine of arm-crossing, shoulder-tapping, and chest-patting in perfect time to the rapid accordion beat. 0:34 he lets out a final triumphant shout.",
+        "casting": [
+          {
+            "original": "The seated performer doing the rapid slap dance",
+            "becomes": "Teddy"
+          }
+        ],
+        "keyframeScene": "Painterly storybook illustration. Teddy, a large round Syrian hamster with bare shaggy apricot fur and glossy black bead eyes, sits behind a thick wooden cutting board in the attic kitchen. Arranged before him are a giant roasted walnut, a tiny jar of pickled clover, and a miniature glass flagon of amber dandelion juice. Warm lamplight pools on the tabletop against a stone hearth background.",
+        "transferPrompt": "Transfer motion from the performer directly onto Teddy. Teddy is bare-furred Syrian hamster with no clothing or hat. Replace the liquor bottle with a miniature flagon of tea and the meat with a giant walnut. Teddy replicates the exact rapid arm-crossing, shoulder-patting, and chest-tapping choreography with his stubby paws, matching every beat, head bounce, and expressive shout in perfect synchronization while remaining seated behind the board.",
+        "caption": "Teddy takes his pre-snack focus rituals remarkably seriously.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamsterart",
+          "webcomic",
+          "slapdance",
+          "premealhype"
+        ],
+        "reasonIfNot": "",
+        "song": "",
+        "swaps": [
+          "Military tank and beret -> bare fur (no clothes)",
+          "Alcohol bottle -> miniature flagon of dandelion tea",
+          "Trotter / meat -> giant roasted walnut",
+          "Pickle jar -> miniature jar of pickled clover shoots"
+        ]
+      }
+    },
+    {
+      "id": "rx558643686",
+      "fileId": "BAACAgEAAxkBAAOzat2aPW9DAoZVW9cDc8PF2zomxUMAAo0IAALj0PBGF1CInNZO0u49BA",
+      "fileSize": 2342828,
+      "durationSec": 14,
+      "note": "",
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-25T07:48:30.806Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Fat Chonky Wizard Cat Singing",
+        "beats": "0:00 Teddy holds the camera low and starts lip-syncing. 0:03-0:05 He strolls forward, singing passionately under glowing lanterns. 0:06-0:07 He dramatically reaches one paw toward the ceiling. 0:08-0:09 Teddy points directly into the camera lens on beat.",
+        "casting": [
+          {
+            "original": "Singing chonky wizard cat",
+            "becomes": "Teddy"
+          }
+        ],
+        "keyframeScene": "Low-angle vertical selfie shot of Teddy, a large shaggy apricot Syrian hamster with glossy black bead eyes, looking down toward the viewer with his mouth parted mid-song. Bare fur with no accessories. Behind him stretches a long attic floorboard path at night, flanked by soft warm lantern lights receding into deep shadow.",
+        "transferPrompt": "The singing cat in the wizard hat walking down the dark road becomes Teddy, the large fluffy apricot Syrian hamster with bare fur. Remove the wizard hat and bell collar completely. The asphalt road becomes cosy wooden attic floorboards flanked by small glowing lanterns. Teddy must precisely track the cat's selfie-arm camera motion, walking pace, expressive lip-syncing mouth movements, dramatic head tilts, theatrical arm raise at 0:05, and decisive paw-point at the lens at 0:08.",
+        "caption": "Teddy insists the acoustics in the attic hallway after midnight are completely unmatched.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamsterlife",
+          "storybookart",
+          "singingcat",
+          "iwannaloveyou"
+        ],
+        "reasonIfNot": "",
+        "song": "Akon ft. Snoop Dogg - I Wanna Love You",
+        "swaps": [
+          "wizard hat -> bare fur",
+          "bell collar -> bare fur",
+          "highway and streetlights -> attic floorboards and miniature lanterns"
         ]
       }
     }
