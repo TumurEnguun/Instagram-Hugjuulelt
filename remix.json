@@ -205,7 +205,7 @@
       "fileSize": 2342828,
       "durationSec": 14,
       "note": "",
-      "status": "frame_sent",
+      "status": "cancelled",
       "attempt": 1,
       "receivedAt": "2026-10-25T07:48:30.806Z",
       "analysis": {
@@ -243,17 +243,41 @@
       "fileSize": 4436925,
       "durationSec": 25,
       "note": "",
-      "status": "new",
-      "attempt": 0,
-      "receivedAt": "2026-10-25T19:12:05.577Z"
+      "status": "frame_sent",
+      "attempt": 1,
+      "receivedAt": "2026-10-25T19:12:05.577Z",
+      "analysis": {
+        "fitsBrand": true,
+        "trendName": "Po and Tigress Dream Trend",
+        "beats": "0:00 Teddy peeks into camera while Ichigo sits by the water. 0:04 Teddy playfully bumps Ichigo into the puddle and flees. 0:08 Ichigo chases him across the grassy ridge. 0:13 They playfully tap twigs together and giggle. 0:17 The pair pause on the hillside, sharing a warm, affectionate glance.",
+        "casting": [
+          {
+            "original": "Po",
+            "becomes": "Teddy"
+          },
+          {
+            "original": "Tigress",
+            "becomes": "Ichigo"
+          }
+        ],
+        "keyframeScene": "Close-up left foreground of Teddy’s round apricot face leaning playfully into the lens with solid glossy black bead eyes. In the midground, Ichigo crouches by a clear water puddle on smooth pebbles. Soft storybook gouache painting style, warm afternoon sunlight, rolling green hills in background.",
+        "transferPrompt": "Transfer motion and framing exactly from source. Po becomes large shaggy apricot hamster Teddy; Tigress becomes tiny silver-white dwarf hamster Ichigo. Both have solid black bead eyes and bare fur without clothes. Teddy nudges Ichigo by the pond and waddles away running; Ichigo scampers in pursuit up the grassy hill. Replace martial arts bo staffs with tiny garden twigs. Maintain painted gouache aesthetic throughout.",
+        "caption": "Teddy finds that testing Ichigo's patience is best followed by a swift retreat.",
+        "hashtags": [
+          "teddyandichigo",
+          "hamsterart",
+          "wholesomecomics",
+          "kungfupanda",
+          "friendshipgoals"
+        ],
+        "song": "Survive (Dream / Follow You)",
+        "swaps": [
+          "Tigress's vest and pants -> bare fur",
+          "Martial arts staffs -> tiny dried twigs"
+        ]
+      }
     }
   ],
-  "presses": [
-    {
-      "data": "RMXX:rx558643686:1",
-      "callbackId": "7885338219408420000",
-      "updateId": 558643691
-    }
-  ],
+  "presses": [],
   "notices": []
 }
